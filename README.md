@@ -1,5 +1,6 @@
 # Versioning
 
+- 0.0.6 (2024.09.07): Add `SocialIcon` component and `Webview` to Explore page
 - 0.0.5 (2024.09.07): Add more Kpop groups for `Explore` page
 - 0.0.4 (2024.09.07): Add `react-native-safe-area-context`
 - 0.0.3 (2024.09.07): Migrate from React Navigation to file-based Expo Routing (https://docs.expo.dev/router/migrate/from-react-navigation/)
