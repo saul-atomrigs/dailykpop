@@ -11,6 +11,7 @@ export default function ExplorePage() {
   const xQuery = 'https://x.com/search?q=' + param;
   const youtubeQuery = 'https://www.youtube.com/results?search_query=' + param;
   const redditQuery = 'https://www.reddit.com/search/?q=' + param;
+  const newsQuery = 'https://news.google.com/search?q=' + param;
 
   const [currentUrl, setCurrentUrl] = useState(youtubeQuery);
 
@@ -32,7 +33,11 @@ export default function ExplorePage() {
           backgroundColor='gray'
           onPress={() => setCurrentUrl(redditQuery)}
         />
-        <SocialIcon text='news' backgroundColor='gray' onPress={() => {}} />
+        <SocialIcon
+          text='news'
+          backgroundColor='gray'
+          onPress={() => setCurrentUrl(newsQuery)}
+        />
       </View>
 
       <View style={styles.webViewContainer}>
