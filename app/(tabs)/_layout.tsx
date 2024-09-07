@@ -20,20 +20,12 @@ export default function TabLayout() {
         options={{
           title: 'Community',
           tabBarIcon: ({ color, focused }) => (
-<<<<<<< HEAD
             <TabBarIcon name='ChatsCircle' color={color} />
-=======
-            <TabBarIcon
-              name={focused ? 'home' : 'home-outline'}
-              color={color}
-            />
->>>>>>> main
           ),
         }}
       />
 
       <Tabs.Screen
-<<<<<<< HEAD
         name='calendar'
         options={{
           title: 'Calendar',
@@ -45,20 +37,10 @@ export default function TabLayout() {
 
       <Tabs.Screen
         name='explore'
-=======
-        name='discover'
->>>>>>> main
         options={{
           title: 'Discover',
           tabBarIcon: ({ color, focused }) => (
-<<<<<<< HEAD
             <TabBarIcon name='Compass' color={color} />
-=======
-            <TabBarIcon
-              name={focused ? 'code-slash' : 'code-slash-outline'}
-              color={color}
-            />
->>>>>>> main
           ),
         }}
       />
