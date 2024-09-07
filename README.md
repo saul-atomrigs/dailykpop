@@ -1,5 +1,6 @@
 # Versioning
 
+- 0.0.5 (2024.09.07): Add more Kpop groups for `Explore` page
 - 0.0.4 (2024.09.07): Add `react-native-safe-area-context`
 - 0.0.3 (2024.09.07): Migrate from React Navigation to file-based Expo Routing (https://docs.expo.dev/router/migrate/from-react-navigation/)
 - 0.0.2 (2024.09.07): Add bottom navigation with `phosphor-react-native` icons (Community, Calendar, Explore tabs)

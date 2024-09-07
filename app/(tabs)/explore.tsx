@@ -5,22 +5,40 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WIDTH = Dimensions.get('window').width;
 
-const dummyData = [
+const kpopGroups = [
   {
     header: 'TRENDING',
     data: [
-      'BTS',
+      '(G)I-DLE',
+      'ATEEZ',
+      'ASTRO',
       'aespa',
+      'BTS',
       'BLACKPINK',
-      'TWICE',
+      'Dreamcatcher',
+      'ENHYPEN',
+      'EVERGLOW',
       'EXO',
+      'GOT7',
       'IVE',
-      'JENNIE',
-      'NCT 127',
-      'Kep1er',
-      'Stray Kids',
       'ITZY',
+      'JENNIE',
+      'Kep1er',
+      'LOONA',
+      'MAMAMOO',
+      'MONSTA X',
+      'NCT 127',
+      'NMIXX',
+      'Oh My Girl',
+      'Red Velvet',
+      'SEVENTEEN',
+      'SF9',
+      'Stray Kids',
+      'STAYC',
+      'TREASURE',
       'TXT',
+      'TWICE',
+      'WINNER',
     ],
   },
 ];
@@ -31,7 +49,7 @@ export default function Explore() {
   return (
     <SafeAreaView>
       <SectionList
-        sections={dummyData}
+        sections={kpopGroups}
         keyExtractor={(item, index) => item + index}
         renderSectionHeader={({ section }) => (
           <Text style={styles.sectionHeader}>{section.header}</Text>
