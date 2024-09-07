@@ -1,9 +1,26 @@
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { type IconProps } from '@expo/vector-icons/build/createIconSet';
+import { CalendarPlus, ChatsCircle, Compass } from 'phosphor-react-native';
 import { type ComponentProps } from 'react';
 
-export function TabBarIcon({ style, ...rest }: IconProps<ComponentProps<typeof Ionicons>['name']>) {
-  return <Ionicons size={28} style={[{ marginBottom: -3 }, style]} {...rest} />;
+type IconProps = ComponentProps<typeof CalendarPlus> & {
+  name: 'CalendarPlus' | 'ChatsCircle' | 'Compass';
+};
+
+export function TabBarIcon({ name, style, ...rest }: IconProps) {
+  const IconComponent = getIconComponent(name);
+  return (
+    <IconComponent size={28} style={[{ marginBottom: -3 }, style]} {...rest} />
+  );
+}
+
+function getIconComponent(name: IconProps['name']) {
+  switch (name) {
+    case 'CalendarPlus':
+      return CalendarPlus;
+    case 'ChatsCircle':
+      return ChatsCircle;
+    case 'Compass':
+      return Compass;
+    default:
+      return CalendarPlus; // Fallback to a default icon
+  }
 }
