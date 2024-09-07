@@ -11,7 +11,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tabIconSelected,
         headerShown: false,
       }}
     >
@@ -20,34 +20,27 @@ export default function TabLayout() {
         options={{
           title: 'Community',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? 'home' : 'home-outline'}
-              color={color}
-            />
+            <TabBarIcon name='ChatsCircle' color={color} />
           ),
         }}
       />
+
       <Tabs.Screen
         name='calendar'
         options={{
           title: 'Calendar',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? 'home' : 'home-outline'}
-              color={color}
-            />
+            <TabBarIcon name='CalendarPlus' color={color} />
           ),
         }}
       />
+
       <Tabs.Screen
         name='explore'
         options={{
           title: 'Explore',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? 'code-slash' : 'code-slash-outline'}
-              color={color}
-            />
+            <TabBarIcon name='Compass' color={color} />
           ),
         }}
       />
