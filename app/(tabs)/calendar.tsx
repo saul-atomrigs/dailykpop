@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
   floatingBtnContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   floatingBtn: {
     borderWidth: 1,
@@ -187,7 +187,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    bottom: 100,
     borderRadius: 20,
     padding: 10,
     elevation: 2,
