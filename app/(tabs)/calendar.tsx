@@ -10,35 +10,39 @@ import { Agenda } from 'react-native-calendars';
 import { BellRinging, Plus } from 'phosphor-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { supabase } from '../../supabaseClient';
 
-// Sample Data
-const sampleData = {
-  '2023-12-15': [
-    {
-      artist: 'aespa',
-      event: 'tv show on MBC',
-    },
-    {
-      artist: 'BTS',
-      event: 'Birthday',
-    },
-  ],
-  '2023-12-16': [
-    {
-      artist: 'ive',
-      event: 'tv show on MBC',
-    },
-  ],
-};
+export default function Calendar() {
+  const [items, setItems] = useState([]);
 
-export default function Calendar1() {
-  const [items, setItems] = useState({});
   const router = useRouter();
 
-  // Use sample data instead of AWS Amplify
   useEffect(() => {
-    setItems(sampleData);
+    const fetchEvents = async () => {
+      const { data, error } = await supabase.from('events').select('*');
+      if (error) {
+        console.log(error);
+      } else {
+        setItems(data);
+      }
+    };
+
+    fetchEvents();
   }, []);
+
+  const itemsReduced = items.reduce((acc, event) => {
+    const date = event.date;
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push({
+      artist: event.artist,
+      event: event.event,
+      id: event.id,
+      date: event.date,
+    });
+    return acc;
+  }, {});
 
   // EACH COMPONENT IN AGENDA
   function renderItem(props: any) {
@@ -72,7 +76,7 @@ export default function Calendar1() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Agenda
-        items={items}
+        items={itemsReduced}
         dayLoading={false}
         renderItem={renderItem}
         renderEmptyData={renderEmptyDate}
