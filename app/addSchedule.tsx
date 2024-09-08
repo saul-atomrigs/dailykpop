@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -59,23 +59,6 @@ export default function AddSchedule() {
       console.error('Error:', e);
     }
   };
-
-  // Fetch items from Supabase
-  const fetchItems = async () => {
-    try {
-      const { data, error } = await supabase.from('events').select('*');
-      if (error) throw error;
-      setItems(data);
-    } catch (err) {
-      console.error('Error fetching events:', err);
-    }
-  };
-
-  // Cleanup to prevent memory leaks
-  useEffect(() => {
-    fetchItems();
-    return () => setItems([]);
-  }, []);
 
   // WheelPicker component
   const WheelPicker = () => {
@@ -146,8 +129,7 @@ export default function AddSchedule() {
               style={styles.addButton}
               onPress={() => {
                 addItem();
-                router.back();
-                fetchItems();
+                router.push('/calendar');
               }}
             >
               <Text style={styles.addButtonText}>Add to Calendar</Text>

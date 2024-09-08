@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Dimensions,
   Text,
@@ -9,7 +9,7 @@ import {
 import { Agenda } from 'react-native-calendars';
 import { BellRinging, Plus } from 'phosphor-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { supabase } from '../../supabaseClient';
 
 export default function Calendar() {
@@ -17,18 +17,20 @@ export default function Calendar() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const { data, error } = await supabase.from('events').select('*');
-      if (error) {
-        console.log(error);
-      } else {
-        setItems(data);
-      }
-    };
+  const fetchEvents = async () => {
+    const { data, error } = await supabase.from('events').select('*');
+    if (error) {
+      console.log(error);
+    } else {
+      setItems(data);
+    }
+  };
 
-    fetchEvents();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchEvents();
+    }, [])
+  );
 
   const itemsReduced = items.reduce((acc, event) => {
     const date = event.date;
