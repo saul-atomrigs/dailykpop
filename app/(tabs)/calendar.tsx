@@ -17,19 +17,16 @@ const sampleData = {
     {
       artist: 'aespa',
       event: 'tv show on MBC',
-      icon: <BellRinging size={20} />,
     },
     {
       artist: 'BTS',
       event: 'Birthday',
-      icon: <BellRinging size={20} />,
     },
   ],
   '2023-12-16': [
     {
       artist: 'ive',
       event: 'tv show on MBC',
-      icon: <BellRinging size={20} />,
     },
   ],
 };
