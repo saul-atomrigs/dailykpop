@@ -1,6 +1,206 @@
-import React from 'react';
-import { Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+} from 'react-native';
+import { Agenda } from 'react-native-calendars';
+import { BellRinging, Plus } from 'phosphor-react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 
-export default function calendar() {
-  return <Text>calendar</Text>;
+// Sample Data
+const sampleData = {
+  '2023-12-15': [
+    {
+      artist: 'aespa',
+      event: 'tv show on MBC',
+      icon: <BellRinging size={20} />,
+    },
+    {
+      artist: 'BTS',
+      event: 'Birthday',
+      icon: <BellRinging size={20} />,
+    },
+  ],
+  '2023-12-16': [
+    {
+      artist: 'ive',
+      event: 'tv show on MBC',
+      icon: <BellRinging size={20} />,
+    },
+  ],
+};
+
+export default function Calendar1() {
+  const [items, setItems] = useState({});
+  const router = useRouter();
+
+  // Use sample data instead of AWS Amplify
+  useEffect(() => {
+    setItems(sampleData);
+  }, []);
+
+  // EACH COMPONENT IN AGENDA
+  function renderItem(props: any) {
+    return (
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() =>
+          router.push({
+            pathname: '/detailedSchedule',
+            params: {
+              artist: props.artist,
+              event: props.event,
+              date: props.date,
+              id: props.id,
+            },
+          })
+        }
+      >
+        <Text style={styles.artist}>{props.artist}</Text>
+        <View style={styles.eventContainer}>
+          <View>{props.icon}</View>
+          <Text style={styles.event}>{props.event}</Text>
+        </View>
+        <View style={styles.stats}>
+          <BellRinging size={20} />
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <Agenda
+        items={items}
+        dayLoading={false}
+        renderItem={renderItem}
+        renderEmptyData={renderEmptyDate}
+        rowHasChanged={rowHasChanged}
+        showClosingKnob={true}
+        markingType={'custom'}
+        showScrollIndicator={true}
+        theme={{
+          textDayFontWeight: '500',
+          textMonthFontWeight: '500',
+          todayButtonFontWeight: '500',
+          textDayHeaderFontWeight: '500',
+          calendarBackground: '#fff',
+          agendaKnobColor: 'gray',
+          agendaTodayColor: 'blue',
+          dotColor: '#000',
+          textSectionTitleColor: '#000',
+          textSectionTitleDisabledColor: '#d9e1e8',
+          selectedDayBackgroundColor: '#000',
+          selectedDayTextColor: '#ffffff',
+          monthTextColor: 'blue',
+          todayTextColor: 'blue',
+          dayTextColor: '#2d4150',
+          textDisabledColor: '#d9e1e8',
+          selectedDotColor: '#ffffff',
+        }}
+        hideExtraDays={false}
+      />
+
+      <View style={styles.floatingBtnContainer}>
+        <TouchableOpacity
+          style={styles.floatingBtn}
+          onPress={() => router.push('/addSchedule')}
+        >
+          <Plus color='white' weight='bold' />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 }
+
+function renderEmptyDate() {
+  return <View style={styles.emptyDate}></View>;
+}
+
+const rowHasChanged = (r1: { text: string }, r2: { text: string }) =>
+  r1.text !== r2.text;
+
+const WIDTH = Dimensions.get('window').width;
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  headerRightButtons: {
+    width: 30,
+    height: 30,
+    marginRight: WIDTH * 0.05,
+  },
+  container: {
+    flex: 1,
+  },
+  dayItem: {
+    textAlign: 'center',
+  },
+  itemsCount: {
+    textAlign: 'center',
+    fontSize: 10,
+  },
+  item: {
+    backgroundColor: '#fff',
+    flex: 1,
+    borderRadius: 13,
+    padding: 10,
+    marginTop: 10,
+    marginRight: 20,
+  },
+  artist: {
+    fontWeight: '800',
+  },
+  eventContainer: {
+    flexDirection: 'row',
+  },
+  event: {
+    marginHorizontal: 10,
+    fontSize: 16,
+  },
+  stats: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+    justifyContent: 'flex-end',
+  },
+  emptyDate: {
+    height: 15,
+    flex: 1,
+    paddingTop: 30,
+  },
+  floatingBtnContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  floatingBtn: {
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    bottom: 100,
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: 'black',
+    shadowColor: 'lightgray',
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+  },
+  floatingBtnText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#fff',
+    textDecorationLine: 'underline',
+  },
+});
