@@ -1,5 +1,6 @@
 # Versioning
 
+- 0.0.9 (2024.09.08): `addSchedule` component
 - 0.0.8 (2024.09.08): implement `Supabase` for `Calendar` events
 - 0.0.7 (2024.09.08): `Calendar` screen setup using `react-native-calendars` and `AsyncStorage` (sample data)
 - 0.0.6 (2024.09.07): Add `SocialIcon` component and `Webview` to Explore page
