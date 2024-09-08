@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
-import { BellRinging, Plus } from 'phosphor-react-native';
+import { Plus, ThumbsUp, ThumbsDown } from 'phosphor-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { supabase } from '../../supabaseClient';
@@ -49,29 +49,22 @@ export default function Calendar() {
   // EACH COMPONENT IN AGENDA
   function renderItem(props: any) {
     return (
-      <TouchableOpacity
-        style={styles.item}
-        onPress={() =>
-          router.push({
-            pathname: '/detailedSchedule',
-            params: {
-              artist: props.artist,
-              event: props.event,
-              date: props.date,
-              id: props.id,
-            },
-          })
-        }
-      >
+      <View style={styles.item}>
         <Text style={styles.artist}>{props.artist}</Text>
         <View style={styles.eventContainer}>
           <View>{props.icon}</View>
           <Text style={styles.event}>{props.event}</Text>
         </View>
         <View style={styles.stats}>
-          <BellRinging size={20} />
+          <TouchableOpacity>
+            <ThumbsUp size={20} />
+          </TouchableOpacity>
+          <Text>0</Text>
+          <TouchableOpacity>
+            <ThumbsDown size={20} />
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   }
 
@@ -169,6 +162,7 @@ const styles = StyleSheet.create({
   },
   stats: {
     flexDirection: 'row',
+    gap: 10,
     marginHorizontal: 10,
     justifyContent: 'flex-end',
   },
