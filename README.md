@@ -1,5 +1,6 @@
 # Versioning
 
+- 0.1.1 (2024.09.09): Integrate Apple login with expo-apple-authentication
 - 0.1.0 (2024.09.09): Setup `firebase`
 - 0.0.9 (2024.09.08): `addSchedule` component
 - 0.0.8 (2024.09.08): implement `Supabase` for `Calendar` events
