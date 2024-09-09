@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
@@ -10,6 +10,7 @@ import {
   signInWithCredential,
   type User,
 } from 'firebase/auth';
+import { GoogleLogo } from 'phosphor-react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -63,16 +64,52 @@ export default function App() {
   };
 
   return (
-    <View>
+    <View style={styles.googleContainer}>
       <Text>{JSON.stringify(userInfo, null, 2)}</Text>
-      <Button
+      <TouchableOpacity
         disabled={!request}
-        title='Login'
         onPress={() => {
           promptAsync();
         }}
-      />
-      <Button title='logout' onPress={() => handleLogout()} />
+        style={styles.googleBtn}
+      >
+        <GoogleLogo
+          weight='bold'
+          color='red'
+          size={20}
+          style={styles.googleLogo}
+        />
+        <Text style={styles.btnText}>Continue with Google</Text>
+      </TouchableOpacity>
+      {/* <Button title='logout' onPress={() => handleLogout()} /> */}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  googleContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  googleBtn: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 200,
+    height: 50,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginTop: 10,
+    backgroundColor: '#fff',
+    borderColor: '#7a7a7a',
+  },
+  googleLogo: {
+    justifyContent: 'center',
+    marginHorizontal: 5,
+  },
+  btnText: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+});
