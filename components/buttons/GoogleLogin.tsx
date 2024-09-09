@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
+import React, { useEffect, useState } from 'react';
+import { Button, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, View, Text } from 'react-native';
-import { useEffect } from 'react';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
 
 // 로그인 버튼 누르면 웹 브라우저가 열리고, 구글 로그인 페이지로 이동함.
 WebBrowser.maybeCompleteAuthSession();
