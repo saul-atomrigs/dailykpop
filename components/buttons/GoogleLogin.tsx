@@ -40,6 +40,7 @@ export default function App() {
             JSON.stringify(userData)
           );
           setUserInfo(userData);
+          console.log('Google User signed in:', userData);
 
           router.push({
             pathname: '/',
@@ -65,7 +66,6 @@ export default function App() {
 
   return (
     <View style={styles.googleContainer}>
-      <Text>{JSON.stringify(userInfo, null, 2)}</Text>
       <TouchableOpacity
         disabled={!request}
         onPress={() => {
@@ -81,7 +81,7 @@ export default function App() {
         />
         <Text style={styles.btnText}>Continue with Google</Text>
       </TouchableOpacity>
-      {/* <Button title='logout' onPress={() => handleLogout()} /> */}
+      <Button title='logout' onPress={() => handleLogout()} />
     </View>
   );
 }

@@ -26,22 +26,34 @@ export default function AppleAuth() {
       });
 
       const { identityToken } = appleCredential;
+      if (!identityToken) {
+        throw new Error('Failed to retrieve identity token');
+      }
+
       const provider = new OAuthProvider('apple.com');
       const credential = provider.credential({
-        idToken: identityToken ?? '',
+        idToken: identityToken,
         rawNonce: nonce,
       });
 
-      await signInWithCredential(auth, credential);
+      // Sign in with Firebase
+      const userCredential = await signInWithCredential(auth, credential);
+      console.log('Apple User signed in:', userCredential);
 
       router.push({ pathname: '/', params: { param: auth.currentUser?.uid } });
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      if (e.code === 'ERR_REQUEST_CANCELED') {
+        console.log('User canceled the sign-in flow');
+      } else if (e.message) {
+        console.error('Error during sign-in:', e.message);
+      } else {
+        console.error('Unknown error during sign-in:', e);
+      }
     }
   };
 
   return (
-    <View style={styles.googleContainer}>
+    <View style={styles.appleContainer}>
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
@@ -54,7 +66,7 @@ export default function AppleAuth() {
 }
 
 const styles = StyleSheet.create({
-  googleContainer: {
+  appleContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

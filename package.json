@@ -48,7 +48,8 @@
     "expo-auth-session": "~5.5.2",
     "expo-crypto": "~13.0.2",
     "@expo/webpack-config": "~19.0.1",
-    "@react-native-async-storage/async-storage": "1.23.1"
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "expo-dev-client": "~4.0.26"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
