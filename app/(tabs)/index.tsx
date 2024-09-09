@@ -5,6 +5,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import AppleLogin from '@/components/buttons/AppleLogin';
+import GoogleLogin from '@/components/buttons/GoogleLogin';
 
 export default function HomeScreen() {
   return (
@@ -52,6 +53,7 @@ export default function HomeScreen() {
         </ThemedText>
       </ThemedView>
       <AppleLogin />
+      <GoogleLogin />
     </ParallaxScrollView>
   );
 }
