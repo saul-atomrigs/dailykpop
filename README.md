@@ -1,5 +1,6 @@
 # Versioning
 
+- 0.1.4 (2024.09.10): Remove expo/webpack-config for dependencies issue
 - 0.1.3 (2024.09.09): Add Expo DevClient
 - 0.1.2 (2024.09.09): Integrate Google login
 - 0.1.1 (2024.09.09): Integrate Apple login with expo-apple-authentication
