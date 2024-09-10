@@ -5,11 +5,18 @@ import * as Crypto from 'expo-crypto';
 import { useRouter } from 'expo-router';
 import { auth } from '@/firebaseConfig';
 import { OAuthProvider, signInWithCredential } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function AppleAuth() {
   const router = useRouter();
 
   const signInWithApple = async () => {
+    const user = await AsyncStorage.getItem('@dailykpop-user');
+    if (user) {
+      router.push({ pathname: '/', params: { param: user } });
+      return;
+    }
+
     try {
       const nonce = Math.random().toString(36).substring(2, 10);
       const hashedNonce = await Crypto.digestStringAsync(
@@ -39,6 +46,9 @@ export default function AppleAuth() {
       // Sign in with Firebase
       const userCredential = await signInWithCredential(auth, credential);
       console.log('Apple User signed in:', userCredential);
+
+      const userId = auth.currentUser?.uid || '';
+      await AsyncStorage.setItem('@dailykpop-user', userId);
 
       router.push({ pathname: '/', params: { param: auth.currentUser?.uid } });
     } catch (e: any) {
