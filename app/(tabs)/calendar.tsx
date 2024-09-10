@@ -27,15 +27,15 @@ export default function Calendar() {
     }
   };
 
-  const handleVote = async (eventId, voteType) => {
+  const handleVote = async (eventId: number, voteType: 'up' | 'down') => {
     try {
       const userId = await AsyncStorage.getItem('@dailykpop-user');
-
       if (!userId) {
         alert('You need to be logged in to vote.');
         return;
       }
 
+      // Check if user has already voted for this event
       const { data: existingVote, error: checkError } = await supabase
         .from('votes')
         .select('*')
@@ -46,47 +46,50 @@ export default function Calendar() {
       if (checkError && checkError.code !== 'PGRST116') {
         throw checkError;
       }
-
       if (existingVote) {
         alert('You have already voted on this event.');
         return;
       }
 
+      // Insert the new vote into the `votes` table
       const { error: insertError } = await supabase
         .from('votes')
         .insert({ user_id: userId, event_id: eventId, vote_type: voteType });
-
       if (insertError) throw insertError;
 
-      const column = voteType === 'up' ? 'thumbs_up' : 'thumbs_down';
+      // Fetch the total thumbs_up and thumbs_down counts
+      const { count: thumbsUpCount } = await supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', eventId)
+        .eq('vote_type', 'up');
 
-      const { data, error: updateError } = await supabase
+      const { count: thumbsDownCount } = await supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', eventId)
+        .eq('vote_type', 'down');
+
+      // Update the thumbs_up and thumbs_down columns in the `events` table
+      const { error: updateError } = await supabase
         .from('events')
         .update({
-          [column]: supabase.rpc('increment', { x: 1 }), // Use RPC function for increment
+          thumbs_up: thumbsUpCount,
+          thumbs_down: thumbsDownCount,
         })
-        .eq('id', eventId)
-        .single();
-
+        .eq('id', eventId);
       if (updateError) throw updateError;
 
-      setItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === eventId
-            ? {
-                ...item,
-                [column]: data[column],
-              }
-            : item
-        )
-      );
+      // Return the updated counts
+      return { thumbsUpCount, thumbsDownCount };
     } catch (error) {
       console.error('Error handling vote:', error);
+      return null;
     }
   };
 
-  const handleThumbsUp = (eventId) => handleVote(eventId, 'up');
-  const handleThumbsDown = (eventId) => handleVote(eventId, 'down');
+  const handleThumbsUp = (eventId: number) => handleVote(eventId, 'up');
+  const handleThumbsDown = (eventId: number) => handleVote(eventId, 'down');
 
   useFocusEffect(
     useCallback(() => {
@@ -165,13 +168,14 @@ export default function Calendar() {
   );
 }
 
-// Move renderItem to a separate functional component
 function RenderItem(props: any) {
   const [hasVoted, setHasVoted] = useState(false);
+  const [thumbsUp, setThumbsUp] = useState(props.thumbs_up);
+  const [thumbsDown, setThumbsDown] = useState(props.thumbs_down);
 
   useEffect(() => {
     const checkUserVote = async () => {
-      const userId = auth.currentUser?.uid;
+      const userId = await AsyncStorage.getItem('@dailykpop-user');
       const { data: userVote } = await supabase
         .from('votes')
         .select('*')
@@ -187,6 +191,17 @@ function RenderItem(props: any) {
     checkUserVote();
   }, []);
 
+  const handleVote = async (voteFunction) => {
+    if (!hasVoted) {
+      const result = await voteFunction(props.id);
+      if (result) {
+        setThumbsUp(result.thumbsUpCount); // Update local thumbsUp count
+        setThumbsDown(result.thumbsDownCount); // Update local thumbsDown count
+        setHasVoted(true);
+      }
+    }
+  };
+
   return (
     <View style={styles.item}>
       <Text style={styles.artist}>{props.artist}</Text>
@@ -194,20 +209,14 @@ function RenderItem(props: any) {
         <Text style={styles.event}>{props.event}</Text>
       </View>
       <View style={styles.stats}>
-        <TouchableOpacity
-          onPress={() => props.handleThumbsUp(props.id)}
-          disabled={hasVoted}
-        >
+        <TouchableOpacity onPress={() => handleVote(props.handleThumbsUp)}>
           <ThumbsUp size={20} />
         </TouchableOpacity>
-        <Text>{props.thumbs_up}</Text>
-        <TouchableOpacity
-          onPress={() => props.handleThumbsDown(props.id)}
-          disabled={hasVoted}
-        >
+        <Text>{thumbsUp}</Text>
+        <TouchableOpacity onPress={() => handleVote(props.handleThumbsDown)}>
           <ThumbsDown size={20} />
         </TouchableOpacity>
-        <Text>{props.thumbs_down}</Text>
+        <Text>{thumbsDown}</Text>
       </View>
     </View>
   );
