@@ -15,7 +15,6 @@ import { GoogleLogo } from 'phosphor-react-native';
 WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
-  const [userInfo, setUserInfo] = useState<User | null>(null);
   const router = useRouter();
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
@@ -35,11 +34,7 @@ export default function App() {
           const result = await signInWithCredential(auth, credential);
           const userData = result.user;
 
-          await AsyncStorage.setItem(
-            '@dailykpop-user',
-            JSON.stringify(userData)
-          );
-          setUserInfo(userData);
+          await AsyncStorage.setItem('@dailykpop-user', userData.uid);
           console.log('Google User signed in:', userData);
 
           router.push({
@@ -51,7 +46,7 @@ export default function App() {
         }
       }
     } else {
-      setUserInfo(JSON.parse(user));
+      console.log('User already signed in:', user);
     }
   };
 
@@ -61,7 +56,7 @@ export default function App() {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('@dailykpop-user');
-    setUserInfo(null);
+    router.push({ pathname: '/' });
   };
 
   return (
