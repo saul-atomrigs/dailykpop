@@ -168,8 +168,10 @@ export default function Calendar() {
   );
 }
 
+// Modified RenderItem component
 function RenderItem(props: any) {
   const [hasVoted, setHasVoted] = useState(false);
+  const [voteType, setVoteType] = useState<'up' | 'down' | null>(null);
   const [thumbsUp, setThumbsUp] = useState(props.thumbs_up);
   const [thumbsDown, setThumbsDown] = useState(props.thumbs_down);
 
@@ -185,20 +187,81 @@ function RenderItem(props: any) {
 
       if (userVote) {
         setHasVoted(true);
+        setVoteType(userVote.vote_type); // Set the current vote type (up or down)
       }
     };
 
     checkUserVote();
   }, []);
 
-  const handleVote = async (voteFunction) => {
-    if (!hasVoted) {
+  const handleVote = async (voteFunction, currentVoteType) => {
+    if (hasVoted && currentVoteType === voteType) {
+      // If the user presses the already pressed icon, remove their vote
+      const result = await removeVote(props.id);
+      if (result) {
+        setThumbsUp(result.thumbsUpCount);
+        setThumbsDown(result.thumbsDownCount);
+        setHasVoted(false);
+        setVoteType(null); // Reset vote type
+      }
+    } else {
+      // If it's a new vote, add the vote
       const result = await voteFunction(props.id);
       if (result) {
-        setThumbsUp(result.thumbsUpCount); // Update local thumbsUp count
-        setThumbsDown(result.thumbsDownCount); // Update local thumbsDown count
+        setThumbsUp(result.thumbsUpCount);
+        setThumbsDown(result.thumbsDownCount);
         setHasVoted(true);
+        setVoteType(currentVoteType); // Set the new vote type
       }
+    }
+  };
+
+  const removeVote = async (eventId: number) => {
+    try {
+      const userId = await AsyncStorage.getItem('@dailykpop-user');
+      if (!userId) {
+        alert('You need to be logged in to undo your vote.');
+        return;
+      }
+
+      // Delete the user's vote from the `votes` table
+      const { error: deleteError } = await supabase
+        .from('votes')
+        .delete()
+        .eq('user_id', userId)
+        .eq('event_id', eventId);
+
+      if (deleteError) throw deleteError;
+
+      // Fetch the updated thumbs_up and thumbs_down counts
+      const { count: thumbsUpCount } = await supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', eventId)
+        .eq('vote_type', 'up');
+
+      const { count: thumbsDownCount } = await supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', eventId)
+        .eq('vote_type', 'down');
+
+      // Update the thumbs_up and thumbs_down columns in the `events` table
+      const { error: updateError } = await supabase
+        .from('events')
+        .update({
+          thumbs_up: thumbsUpCount,
+          thumbs_down: thumbsDownCount,
+        })
+        .eq('id', eventId);
+
+      if (updateError) throw updateError;
+
+      // Return the updated counts
+      return { thumbsUpCount, thumbsDownCount };
+    } catch (error) {
+      console.error('Error removing vote:', error);
+      return null;
     }
   };
 
@@ -209,12 +272,24 @@ function RenderItem(props: any) {
         <Text style={styles.event}>{props.event}</Text>
       </View>
       <View style={styles.stats}>
-        <TouchableOpacity onPress={() => handleVote(props.handleThumbsUp)}>
-          <ThumbsUp size={20} />
+        <TouchableOpacity
+          onPress={() => handleVote(props.handleThumbsUp, 'up')}
+        >
+          <ThumbsUp
+            size={20}
+            color={voteType === 'up' ? 'hotpink' : 'black'}
+            weight={voteType === 'up' ? 'duotone' : 'thin'}
+          />
         </TouchableOpacity>
         <Text>{thumbsUp}</Text>
-        <TouchableOpacity onPress={() => handleVote(props.handleThumbsDown)}>
-          <ThumbsDown size={20} />
+        <TouchableOpacity
+          onPress={() => handleVote(props.handleThumbsDown, 'down')}
+        >
+          <ThumbsDown
+            size={20}
+            color={voteType === 'down' ? 'hotpink' : 'black'}
+            weight={voteType === 'down' ? 'duotone' : 'thin'}
+          />
         </TouchableOpacity>
         <Text>{thumbsDown}</Text>
       </View>
