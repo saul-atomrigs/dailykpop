@@ -83,7 +83,6 @@ export default function App() {
 
 const styles = StyleSheet.create({
   googleContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
