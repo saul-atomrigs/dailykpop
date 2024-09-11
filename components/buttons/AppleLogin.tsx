@@ -77,7 +77,6 @@ export default function AppleAuth() {
 
 const styles = StyleSheet.create({
   appleContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
