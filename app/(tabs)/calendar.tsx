@@ -13,6 +13,7 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import { supabase } from '../../supabaseClient';
 import { auth } from '@/firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddButton from '@/components/buttons/Add';
 
 export default function Calendar() {
   const [items, setItems] = useState([]);
@@ -156,14 +157,7 @@ export default function Calendar() {
         hideExtraDays={false}
       />
 
-      <View style={styles.floatingBtnContainer}>
-        <TouchableOpacity
-          style={styles.floatingBtn}
-          onPress={() => router.push('/addSchedule')}
-        >
-          <Plus color='white' weight='bold' />
-        </TouchableOpacity>
-      </View>
+      <AddButton routeName='/addSchedule' />
     </SafeAreaView>
   );
 }
@@ -354,34 +348,5 @@ const styles = StyleSheet.create({
     height: 15,
     flex: 1,
     paddingTop: 30,
-  },
-  floatingBtnContainer: {
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    top: 20,
-  },
-  floatingBtn: {
-    borderWidth: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    backgroundColor: 'black',
-    shadowColor: 'lightgray',
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-  },
-  floatingBtnText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#fff',
-    textDecorationLine: 'underline',
   },
 });

@@ -10,6 +10,7 @@ import {
 import { useRouter } from 'expo-router';
 import { ChatText, Heart, Plus } from 'phosphor-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AddButton from '@/components/buttons/Add';
 
 export default function Feed(props) {
   const [posts, setPosts] = useState([
@@ -93,14 +94,7 @@ export default function Feed(props) {
         </View>
       </ScrollView>
 
-      <View style={styles.floatingBtnContainer}>
-        <TouchableOpacity
-          style={styles.floatingBtn}
-          onPress={() => router.push('/addSchedule')}
-        >
-          <Plus color='white' weight='bold' />
-        </TouchableOpacity>
-      </View>
+      <AddButton routeName='/addPost' />
     </SafeAreaView>
   );
 }
@@ -159,34 +153,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     flexDirection: 'row',
     alignItems: 'center', // Ensure icons and text are centered
-  },
-  floatingBtnContainer: {
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    top: 20,
-  },
-  floatingBtn: {
-    borderWidth: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    backgroundColor: 'black',
-    shadowColor: 'lightgray',
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-  },
-  floatingBtnText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#fff',
-    textDecorationLine: 'underline',
   },
 });
