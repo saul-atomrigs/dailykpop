@@ -1,5 +1,6 @@
 # Versioning
 
+- 0.1.8 (2024.09.11): Community page (feeds)
 - 0.1.7 (2024.09.11): Login page UI
 - 0.1.6 (2024.09.11): Cancel vote, limit one vote per `eventId`
 - 0.1.5 (2024.09.10): Implement voting system with supabase

@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppleLogin from '@/components/buttons/AppleLogin';
 import GoogleLogin from '@/components/buttons/GoogleLogin';
 
-export default function LoginPage() {
+export default function login() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
