@@ -96,7 +96,7 @@ export default function Feed(props) {
       <View style={styles.floatingBtnContainer}>
         <TouchableOpacity
           style={styles.floatingBtn}
-          onPress={() => router.push('/addPost')}
+          onPress={() => router.push('/addSchedule')}
         >
           <Plus color='white' weight='bold' />
         </TouchableOpacity>
@@ -110,7 +110,6 @@ const WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   safeareaview: {
     flex: 1,
-    marginBottom: -50,
   },
   container: {
     backgroundColor: '#eee',
@@ -162,21 +161,20 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Ensure icons and text are centered
   },
   floatingBtnContainer: {
-    position: 'absolute',
-    right: 20,
-    bottom: 70,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    top: 20,
   },
   floatingBtn: {
     borderWidth: 1,
-    borderColor: 'lightgray',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50,
-    padding: 15,
-    elevation: 5,
+    position: 'relative',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
     backgroundColor: 'black',
-    // shadow for iOS:
     shadowColor: 'lightgray',
     shadowOffset: {
       width: 5,
@@ -184,5 +182,11 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: 5,
+  },
+  floatingBtnText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#fff',
+    textDecorationLine: 'underline',
   },
 });

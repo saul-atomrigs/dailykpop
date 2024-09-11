@@ -358,6 +358,7 @@ const styles = StyleSheet.create({
   floatingBtnContainer: {
     justifyContent: 'center',
     paddingHorizontal: 20,
+    top: 20,
   },
   floatingBtn: {
     borderWidth: 1,
