@@ -1,5 +1,6 @@
 # Versioning
 
+- 0.1.6 (2024.09.11): Cancel vote, limit one vote per `eventId`
 - 0.1.5 (2024.09.10): Implement voting system with supabase
 - 0.1.4 (2024.09.10): Remove expo/webpack-config for dependencies issue
 - 0.1.3 (2024.09.09): Add Expo DevClient
