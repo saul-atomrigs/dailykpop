@@ -51,7 +51,7 @@ export default function AddFeed() {
     });
 
     if (!result.canceled) {
-      setPost({ ...post, image: result.uri });
+      setPost({ ...post, image: result.assets[0].uri });
     }
   };
 
@@ -70,14 +70,17 @@ export default function AddFeed() {
       if (post.image) {
         const fileName = post.image.split('/').pop();
         const { data, error: uploadError } = await supabase.storage
-          .from('posts')
-          .upload(`public/${fileName}`, {
+          .from('posts') // Ensure the bucket 'posts' exists
+          .upload(fileName, {
             uri: post.image,
-            type: 'image/jpeg', // or any image format
+            type: 'image/jpeg', // or other relevant types
             name: fileName,
           });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error('Upload error:', uploadError);
+          throw new Error('Image upload failed');
+        }
 
         imageUrl = data?.path
           ? supabase.storage.from('posts').getPublicUrl(data.path).publicURL
@@ -97,7 +100,7 @@ export default function AddFeed() {
       Alert.alert('Post added successfully!');
       router.push('/'); // Redirect to the Feed page
     } catch (e) {
-      Alert.alert('Error adding post:', e.message);
+      Alert.alert('Error adding post:', e.message || e.toString());
     } finally {
       setLoading(false);
     }
