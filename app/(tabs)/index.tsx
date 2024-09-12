@@ -20,6 +20,7 @@ interface Post {
   content: string;
   created_at: string;
   likes: number;
+  image_url: string | null;
   comments: number;
   author_id: string;
 }
@@ -66,7 +67,14 @@ export default function Feed() {
                 onPress={() =>
                   router.push({
                     pathname: '/detailedFeed',
-                    params: { param: post },
+                    params: {
+                      id: post.id,
+                      title: post.title,
+                      content: post.content,
+                      image_url: post.image_url,
+                      likes: post.likes,
+                      comments: JSON.stringify(post.comments), // serialize comments
+                    },
                   })
                 }
               >
