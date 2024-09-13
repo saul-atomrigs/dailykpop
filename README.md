@@ -1,5 +1,6 @@
 # Versioning
 
+- 0.2.2 (2024.09.13): Check user login for likes
 - 0.2.1 (2024.09.13): Comments UI and backend code (logged-in users can comment)
 - 0.2.0 (2024.09.12): Fix image picker iOS permission
 - 0.1.9 (2024.09.12): Add feed page
