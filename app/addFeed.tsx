@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,11 +15,12 @@ import { supabase } from '@/supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
+import LoginPage from './login';
 
 interface NewPost {
   title: string;
   content: string;
-  image: string | null; // Nullable because image is optional
+  image: string | null;
 }
 
 export default function AddFeed() {
@@ -29,7 +30,16 @@ export default function AddFeed() {
     image: null,
   });
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const id = await AsyncStorage.getItem('@dailykpop-user');
+      setUserId(id);
+    };
+    fetchUserId();
+  }, []);
 
   const handleInputChange = (name: keyof NewPost, value: string) => {
     setPost({ ...post, [name]: value });
@@ -43,18 +53,12 @@ export default function AddFeed() {
 
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
-    // Save image if not cancelled
     if (!result.canceled) {
       const img = result.assets[0];
-
-      // Convert the image to base64
       const base64 = await FileSystem.readAsStringAsync(img.uri, {
         encoding: 'base64',
       });
-
-      console.log('Image selected:', img.uri); // Log the URI for debugging
-
-      // Update the state with the base64 string
+      console.log('Image selected:', img.uri);
       setPost({ ...post, image: base64 });
     }
   };
@@ -62,7 +66,6 @@ export default function AddFeed() {
   const handleAddPost = async () => {
     setLoading(true);
     try {
-      const userId = await AsyncStorage.getItem('@dailykpop-user');
       if (!userId) {
         Alert.alert('Error', 'User ID not found');
         return;
@@ -70,16 +73,14 @@ export default function AddFeed() {
 
       let imageUrl = null;
 
-      // Upload image if available (in base64 format)
       if (post.image) {
-        const fileName = `image_${Date.now()}.jpg`; // Generate a unique file name
+        const fileName = `image_${Date.now()}.jpg`;
         console.log('Starting image upload...');
 
-        // Upload image to Supabase storage
         const { data, error: uploadError } = await supabase.storage
           .from('posts')
           .upload(fileName, decode(post.image), {
-            contentType: 'image/jpeg', // Specify the MIME type
+            contentType: 'image/jpeg',
           });
 
         if (uploadError) {
@@ -88,7 +89,6 @@ export default function AddFeed() {
         }
         console.log('Image uploaded successfully:', data);
 
-        // Generate public URL for the uploaded image
         const { data: publicUrlData } = supabase.storage
           .from('posts')
           .getPublicUrl(data.path);
@@ -99,13 +99,12 @@ export default function AddFeed() {
         console.log('Final image URL:', imageUrl);
       }
 
-      // Now insert the post into the database, with the imageUrl if available
       console.log('Inserting post with image URL:', imageUrl);
       const { error: insertError } = await supabase.from('posts').insert({
         title: post.title,
         content: post.content,
         author_id: userId,
-        image_url: imageUrl, // This will now have the correct URL if an image was uploaded
+        image_url: imageUrl,
       });
 
       if (insertError) {
@@ -122,6 +121,10 @@ export default function AddFeed() {
       setLoading(false);
     }
   };
+
+  if (userId === null) {
+    return <LoginPage />;
+  }
 
   return (
     <View style={styles.container}>
@@ -145,7 +148,10 @@ export default function AddFeed() {
       </TouchableOpacity>
 
       {post.image && (
-        <Image source={{ uri: post.image }} style={styles.imagePreview} />
+        <Image
+          source={{ uri: `data:image/jpeg;base64,${post.image}` }}
+          style={styles.imagePreview}
+        />
       )}
 
       <Button
