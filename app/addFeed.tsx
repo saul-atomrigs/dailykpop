@@ -13,6 +13,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system';
+import { decode } from 'base64-arraybuffer';
 
 interface NewPost {
   title: string;
@@ -33,25 +35,27 @@ export default function AddFeed() {
     setPost({ ...post, [name]: value });
   };
 
-  // Image picker function
   const pickImage = async () => {
-    // Request permission
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      Alert.alert('Permission to access camera roll is required!');
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
+    const options: ImagePicker.ImagePickerOptions = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      quality: 1,
-    });
+    };
 
+    const result = await ImagePicker.launchImageLibraryAsync(options);
+
+    // Save image if not cancelled
     if (!result.canceled) {
-      setPost({ ...post, image: result.assets[0].uri });
+      const img = result.assets[0];
+
+      // Convert the image to base64
+      const base64 = await FileSystem.readAsStringAsync(img.uri, {
+        encoding: 'base64',
+      });
+
+      console.log('Image selected:', img.uri); // Log the URI for debugging
+
+      // Update the state with the base64 string
+      setPost({ ...post, image: base64 });
     }
   };
 
@@ -66,40 +70,53 @@ export default function AddFeed() {
 
       let imageUrl = null;
 
-      // Upload image if available
+      // Upload image if available (in base64 format)
       if (post.image) {
-        const fileName = post.image.split('/').pop();
+        const fileName = `image_${Date.now()}.jpg`; // Generate a unique file name
+        console.log('Starting image upload...');
+
+        // Upload image to Supabase storage
         const { data, error: uploadError } = await supabase.storage
-          .from('posts') // Ensure the bucket 'posts' exists
-          .upload(fileName, {
-            uri: post.image,
-            type: 'image/jpeg', // or other relevant types
-            name: fileName,
+          .from('posts')
+          .upload(fileName, decode(post.image), {
+            contentType: 'image/jpeg', // Specify the MIME type
           });
 
         if (uploadError) {
           console.error('Upload error:', uploadError);
           throw new Error('Image upload failed');
         }
+        console.log('Image uploaded successfully:', data);
 
-        imageUrl = data?.path
-          ? supabase.storage.from('posts').getPublicUrl(data.path).publicURL
-          : null;
+        // Generate public URL for the uploaded image
+        const { data: publicUrlData } = supabase.storage
+          .from('posts')
+          .getPublicUrl(data.path);
+
+        console.log('Public URL data:', publicUrlData);
+
+        imageUrl = publicUrlData?.publicUrl || null;
+        console.log('Final image URL:', imageUrl);
       }
 
-      // Insert post into the database
-      const { error } = await supabase.from('posts').insert({
+      // Now insert the post into the database, with the imageUrl if available
+      console.log('Inserting post with image URL:', imageUrl);
+      const { error: insertError } = await supabase.from('posts').insert({
         title: post.title,
         content: post.content,
         author_id: userId,
-        image_url: imageUrl, // Add image URL to the post
+        image_url: imageUrl, // This will now have the correct URL if an image was uploaded
       });
 
-      if (error) throw error;
+      if (insertError) {
+        console.error('Post insertion error:', insertError);
+        throw insertError;
+      }
 
       Alert.alert('Post added successfully!');
-      router.push('/'); // Redirect to the Feed page
-    } catch (e) {
+      router.push('/');
+    } catch (e: any) {
+      console.error('Error adding post:', e);
       Alert.alert('Error adding post:', e.message || e.toString());
     } finally {
       setLoading(false);
