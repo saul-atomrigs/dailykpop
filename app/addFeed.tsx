@@ -12,10 +12,10 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/supabaseClient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
 import LoginPage from './login';
+import { useAuth } from '@/hooks/useAuth';
 
 interface NewPost {
   title: string;
@@ -30,16 +30,8 @@ export default function AddFeed() {
     image: null,
   });
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
+  const { userId, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const id = await AsyncStorage.getItem('@dailykpop-user');
-      setUserId(id);
-    };
-    fetchUserId();
-  }, []);
 
   const handleInputChange = (name: keyof NewPost, value: string) => {
     setPost({ ...post, [name]: value });
@@ -122,7 +114,7 @@ export default function AddFeed() {
     }
   };
 
-  if (userId === null) {
+  if (!isAuthenticated) {
     return <LoginPage />;
   }
 
