@@ -1,10 +1,9 @@
 import { useRouter } from 'expo-router';
 import { Plus } from 'phosphor-react-native';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function AddButton({ routeName }: { routeName: string }) {
-  // Destructure `routeName` from props
   const router = useRouter();
   return (
     <View style={styles.floatingBtnContainer}>
@@ -22,7 +21,7 @@ const styles = StyleSheet.create({
   floatingBtnContainer: {
     justifyContent: 'center',
     paddingHorizontal: 20,
-    top: 20,
+    top: Platform.OS === 'ios' ? 20 : 0,
   },
   floatingBtn: {
     borderWidth: 1,
