@@ -6,8 +6,8 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  FlatList,
   Alert,
+  FlatList,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { UserSquare, Heart } from 'phosphor-react-native';
@@ -26,44 +26,35 @@ export default function DetailedFeed() {
 
   const [likes, setLikes] = useState(initialLikes ? Number(initialLikes) : 0);
   const [liked, setLiked] = useState(false);
-  const [comments, setComments] = useState(() => {
-    return rawComments ? JSON.parse(rawComments as string) : [];
-  });
+  const [comments, setComments] = useState(() =>
+    rawComments ? JSON.parse(rawComments as string) : []
+  );
 
   const { userId, isAuthenticated } = useAuth(); // Use the useAuth hook
 
   useEffect(() => {
-    console.log('Post Params:', {
-      id,
-      title,
-      content,
-      image_url,
-      likes,
-      comments,
-    });
+    const checkIfLiked = async () => {
+      if (!id || !userId) return;
 
-    // Check if the current user has liked this post
-    if (isAuthenticated && userId) {
-      checkUserLike();
-    }
-  }, [id, title, content, image_url, likes, comments, isAuthenticated, userId]);
-
-  const checkUserLike = async () => {
-    try {
+      // Fetch the post to get the liked_by array
       const { data, error } = await supabase
-        .from('likes')
-        .select('*')
-        .eq('post_id', id)
-        .eq('user_id', userId)
+        .from('posts')
+        .select('liked_by')
+        .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching liked_by:', error);
+        return;
+      }
 
-      setLiked(!!data);
-    } catch (error) {
-      console.error('Error checking user like:', error);
-    }
-  };
+      if (data.liked_by && data.liked_by.includes(userId)) {
+        setLiked(true);
+      }
+    };
+
+    checkIfLiked();
+  }, [id, userId]);
 
   const toggleLike = async () => {
     if (!isAuthenticated) {
@@ -72,35 +63,39 @@ export default function DetailedFeed() {
     }
 
     try {
+      // Fetch the current liked_by array from the post
+      const { data: postData, error: fetchError } = await supabase
+        .from('posts')
+        .select('liked_by, likes')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      let updatedLikedBy = [...(postData.liked_by || [])];
+      let updatedLikes = postData.likes;
+
       if (liked) {
-        // Remove like
-        const { error } = await supabase
-          .from('likes')
-          .delete()
-          .eq('post_id', id)
-          .eq('user_id', userId);
-
-        if (error) throw error;
-
-        setLikes(likes - 1);
-        setLiked(false);
+        // If the post was liked, unlike it (remove userId from liked_by)
+        updatedLikedBy = updatedLikedBy.filter((user) => user !== userId);
+        updatedLikes -= 1;
       } else {
-        // Add like
-        const { error } = await supabase
-          .from('likes')
-          .insert({ post_id: id, user_id: userId });
-
-        if (error) throw error;
-
-        setLikes(likes + 1);
-        setLiked(true);
+        // Like the post (add userId to liked_by)
+        updatedLikedBy.push(userId);
+        updatedLikes += 1;
       }
 
-      // Update the total likes count in the posts table
-      await supabase
+      // Update the post in the database with the new liked_by array and likes count
+      const { error } = await supabase
         .from('posts')
-        .update({ likes: likes + (liked ? -1 : 1) })
+        .update({ liked_by: updatedLikedBy, likes: updatedLikes })
         .eq('id', id);
+
+      if (error) throw error;
+
+      // Update local state
+      setLikes(updatedLikes);
+      setLiked(!liked);
     } catch (error) {
       console.error('Error toggling like:', error);
       Alert.alert('Error', 'Failed to update like status. Please try again.');
