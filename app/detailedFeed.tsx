@@ -148,66 +148,68 @@ export default function DetailedFeed() {
     }
   };
 
+  const renderItem = ({ item }) => (
+    <View style={styles.comment}>
+      <Text style={styles.commentText}>{item.comment}</Text>
+    </View>
+  );
+
   return (
-    <ScrollView style={styles.container}>
-      {/* Title */}
-      <Text style={styles.title}>{title}</Text>
+    <View style={styles.container}>
+      <FlatList
+        ListHeaderComponent={
+          <>
+            {/* Title */}
+            <Text style={styles.title}>{title}</Text>
 
-      {/* Author */}
-      <View style={styles.author}>
-        <UserSquare size={24} color='black' />
-        <Text style={styles.authorText}>Author</Text>
-      </View>
+            {/* Author */}
+            <View style={styles.author}>
+              <UserSquare size={24} color='black' />
+              <Text style={styles.authorText}>Author</Text>
+            </View>
 
-      {/* Content */}
-      <Text style={styles.content}>{content}</Text>
+            {/* Content */}
+            <Text style={styles.content}>{content}</Text>
 
-      {/* Image if any */}
-      {image_url && (
-        <Image source={{ uri: image_url as string }} style={styles.image} />
-      )}
-
-      {/* Like Button */}
-      <View style={styles.likeContainer}>
-        <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
-          <Heart size={24} color={liked ? 'red' : 'black'} />
-          <Text style={styles.likeText}> {likes} Likes </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Comments Section */}
-      <View style={styles.commentSection}>
-        <Text style={styles.commentTitle}>Comments</Text>
-
-        {/* Render comments */}
-        {comments.length > 0 ? (
-          <FlatList
-            data={comments}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.comment}>
-                <Text style={styles.commentText}>{item.comment}</Text>
-              </View>
+            {/* Image if any */}
+            {image_url && (
+              <Image
+                source={{ uri: image_url as string }}
+                style={styles.image}
+              />
             )}
-          />
-        ) : (
-          <Text>No comments yet.</Text>
-        )}
 
-        {/* Comment input and submit button */}
-        <View style={styles.commentInputContainer}>
-          <TextInput
-            style={styles.commentInput}
-            placeholder='Write a comment...'
-            value={newComment}
-            onChangeText={setNewComment}
-          />
-          <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
-            <PaperPlaneTilt size={24} color='black' />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+            {/* Like Button */}
+            <View style={styles.likeContainer}>
+              <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
+                <Heart size={24} color={liked ? 'red' : 'black'} />
+                <Text style={styles.likeText}> {likes} Likes </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Comments Section Header */}
+            <Text style={styles.commentTitle}>Comments</Text>
+          </>
+        }
+        data={comments}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={<Text>No comments yet.</Text>}
+        ListFooterComponent={
+          <View style={styles.commentInputContainer}>
+            <TextInput
+              style={styles.commentInput}
+              placeholder='Write a comment...'
+              value={newComment}
+              onChangeText={setNewComment}
+            />
+            <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
+              <PaperPlaneTilt size={24} color='black' />
+            </TouchableOpacity>
+          </View>
+        }
+      />
+    </View>
   );
 }
 
