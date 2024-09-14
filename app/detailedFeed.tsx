@@ -226,6 +226,7 @@ export default function DetailedFeed() {
           <TextInput
             style={styles.commentInput}
             placeholder='Write a comment...'
+            placeholderTextColor={'#555'}
             value={newComment}
             onChangeText={setNewComment}
           />
@@ -293,8 +294,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   commentInputContainer: {
-    position: 'absolute',
-    bottom: 0,
     left: 0,
     right: 0,
     flexDirection: 'row',

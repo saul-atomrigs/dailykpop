@@ -123,13 +123,15 @@ export default function AddFeed() {
     <SafeAreaView style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder='Post Title'
+        placeholder='Title'
+        placeholderTextColor={'#999'}
         value={post.title}
         onChangeText={(text) => handleInputChange('title', text)}
       />
       <TextInput
         style={[styles.input, styles.textArea]}
-        placeholder='Post Content'
+        placeholder='Content'
+        placeholderTextColor={'#999'}
         value={post.content}
         onChangeText={(text) => handleInputChange('content', text)}
         multiline
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   textArea: {
-    height: 120,
+    height: 200,
     textAlignVertical: 'top',
   },
   imagePicker: {
