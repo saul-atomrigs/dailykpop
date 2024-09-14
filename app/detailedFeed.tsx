@@ -27,12 +27,10 @@ export default function DetailedFeed() {
 
   const [likes, setLikes] = useState(initialLikes ? Number(initialLikes) : 0);
   const [liked, setLiked] = useState(false);
-  const [comments, setComments] = useState(() =>
-    rawComments ? JSON.parse(rawComments as string) : []
-  );
-  const [newComment, setNewComment] = useState(''); // State for new comment input
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
 
-  const { userId, isAuthenticated } = useAuth(); // Use the useAuth hook
+  const { userId, isAuthenticated } = useAuth();
 
   useEffect(() => {
     const checkIfLiked = async () => {
@@ -54,7 +52,25 @@ export default function DetailedFeed() {
       }
     };
 
+    const fetchComments = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('comments')
+          .select('*')
+          .eq('post_id', id)
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        setComments(data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+        Alert.alert('Error', 'Failed to fetch comments. Please try again.');
+      }
+    };
+
     checkIfLiked();
+    fetchComments();
   }, [id, userId]);
 
   const toggleLike = async () => {
@@ -160,42 +176,30 @@ export default function DetailedFeed() {
         keyboardShouldPersistTaps='handled'
         ListHeaderComponent={
           <>
-            {/* Title */}
             <Text style={styles.title}>{title}</Text>
-
-            {/* Author */}
             <View style={styles.author}>
               <UserSquare size={24} color='black' />
               <Text style={styles.authorText}>Author</Text>
             </View>
-
-            {/* Content */}
             <Text style={styles.content}>{content}</Text>
-
-            {/* Image if any */}
             {image_url && (
               <Image
                 source={{ uri: image_url as string }}
                 style={styles.image}
               />
             )}
-
-            {/* Like Button */}
             <View style={styles.likeContainer}>
               <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
                 <Heart size={24} color={liked ? 'red' : 'black'} />
                 <Text style={styles.likeText}> {likes} Likes </Text>
               </TouchableOpacity>
             </View>
-
-            {/* Comments Section Header */}
             <Text style={styles.commentTitle}>Comments</Text>
           </>
         }
         data={comments}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={<Text>No comments yet.</Text>}
+        keyExtractor={(item) => item.id.toString()}
         ListFooterComponent={
           <View style={styles.commentInputContainer}>
             <TextInput
