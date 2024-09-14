@@ -8,9 +8,10 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  TextInput,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { UserSquare, Heart } from 'phosphor-react-native';
+import { UserSquare, Heart, PaperPlaneTilt } from 'phosphor-react-native';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/supabaseClient';
 
@@ -29,6 +30,7 @@ export default function DetailedFeed() {
   const [comments, setComments] = useState(() =>
     rawComments ? JSON.parse(rawComments as string) : []
   );
+  const [newComment, setNewComment] = useState(''); // State for new comment input
 
   const { userId, isAuthenticated } = useAuth(); // Use the useAuth hook
 
@@ -36,7 +38,6 @@ export default function DetailedFeed() {
     const checkIfLiked = async () => {
       if (!id || !userId) return;
 
-      // Fetch the post to get the liked_by array
       const { data, error } = await supabase
         .from('posts')
         .select('liked_by')
@@ -63,7 +64,6 @@ export default function DetailedFeed() {
     }
 
     try {
-      // Fetch the current liked_by array from the post
       const { data: postData, error: fetchError } = await supabase
         .from('posts')
         .select('liked_by, likes')
@@ -76,16 +76,13 @@ export default function DetailedFeed() {
       let updatedLikes = postData.likes;
 
       if (liked) {
-        // If the post was liked, unlike it (remove userId from liked_by)
         updatedLikedBy = updatedLikedBy.filter((user) => user !== userId);
         updatedLikes -= 1;
       } else {
-        // Like the post (add userId to liked_by)
         updatedLikedBy.push(userId);
         updatedLikes += 1;
       }
 
-      // Update the post in the database with the new liked_by array and likes count
       const { error } = await supabase
         .from('posts')
         .update({ liked_by: updatedLikedBy, likes: updatedLikes })
@@ -93,12 +90,61 @@ export default function DetailedFeed() {
 
       if (error) throw error;
 
-      // Update local state
       setLikes(updatedLikes);
       setLiked(!liked);
     } catch (error) {
       console.error('Error toggling like:', error);
       Alert.alert('Error', 'Failed to update like status. Please try again.');
+    }
+  };
+
+  const submitComment = async () => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        'Authentication Required',
+        'Please log in to submit a comment.'
+      );
+      return;
+    }
+
+    if (!newComment.trim()) {
+      Alert.alert('Empty Comment', 'Comment cannot be empty.');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .insert([
+          {
+            post_id: id,
+            comment: newComment,
+            author_id: userId,
+            created_at: new Date().toISOString(),
+          },
+        ])
+        .select();
+
+      if (error) throw error;
+
+      if (Array.isArray(data) && data.length > 0) {
+        const newCommentObj = data[0];
+        setComments((prevComments) => {
+          return Array.isArray(prevComments)
+            ? [...prevComments, newCommentObj]
+            : [newCommentObj];
+        });
+        setNewComment('');
+      } else {
+        console.error('Unexpected response format:', data);
+        Alert.alert(
+          'Error',
+          'Unexpected response from server. Please try again.'
+        );
+      }
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+      Alert.alert('Error', 'Failed to submit comment. Please try again.');
     }
   };
 
@@ -137,7 +183,7 @@ export default function DetailedFeed() {
         {comments.length > 0 ? (
           <FlatList
             data={comments}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={styles.comment}>
                 <Text style={styles.commentText}>{item.comment}</Text>
@@ -147,6 +193,19 @@ export default function DetailedFeed() {
         ) : (
           <Text>No comments yet.</Text>
         )}
+
+        {/* Comment input and submit button */}
+        <View style={styles.commentInputContainer}>
+          <TextInput
+            style={styles.commentInput}
+            placeholder='Write a comment...'
+            value={newComment}
+            onChangeText={setNewComment}
+          />
+          <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
+            <PaperPlaneTilt size={24} color='black' />
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -174,4 +233,20 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   commentText: { fontSize: 16, color: '#555' },
+  commentInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  commentInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 8,
+    fontSize: 16,
+  },
+  sendButton: {
+    marginLeft: 8,
+  },
 });
