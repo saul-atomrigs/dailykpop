@@ -9,11 +9,14 @@ import {
   Alert,
   FlatList,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { UserSquare, Heart, PaperPlaneTilt } from 'phosphor-react-native';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/supabaseClient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DetailedFeed() {
   const {
@@ -180,55 +183,72 @@ export default function DetailedFeed() {
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        keyboardShouldPersistTaps='handled'
-        ListHeaderComponent={
-          <>
-            <Text style={styles.title}>{title}</Text>
-            <View style={styles.author}>
-              <UserSquare size={24} color='black' />
-              <Text style={styles.authorText}>Author</Text>
-            </View>
-            <Text style={styles.content}>{content}</Text>
-            {image_url && (
-              <Image
-                source={{ uri: image_url as string }}
-                style={styles.image}
-              />
-            )}
-            <View style={styles.likeContainer}>
-              <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
-                <Heart size={24} color={liked ? 'red' : 'black'} />
-                <Text style={styles.likeText}> {likes} Likes </Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.commentTitle}>Comments</Text>
-          </>
-        }
-        data={comments}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        ListFooterComponent={
-          <View style={styles.commentInputContainer}>
-            <TextInput
-              style={styles.commentInput}
-              placeholder='Write a comment...'
-              value={newComment}
-              onChangeText={setNewComment}
-            />
-            <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
-              <PaperPlaneTilt size={24} color='white' />
-            </TouchableOpacity>
-          </View>
-        }
-      />
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <FlatList
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps='handled'
+          ListHeaderComponent={
+            <>
+              <Text style={styles.title}>{title}</Text>
+              <View style={styles.author}>
+                <UserSquare size={24} color='black' />
+                <Text style={styles.authorText}>Author</Text>
+              </View>
+              <Text style={styles.content}>{content}</Text>
+              {image_url && (
+                <Image
+                  source={{ uri: image_url as string }}
+                  style={styles.image}
+                />
+              )}
+              <View style={styles.likeContainer}>
+                <TouchableOpacity
+                  onPress={toggleLike}
+                  style={styles.likeButton}
+                >
+                  <Heart size={24} color={liked ? 'red' : 'black'} />
+                  <Text style={styles.likeText}> {likes} Likes </Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.commentTitle}>Comments</Text>
+            </>
+          }
+          data={comments}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
+        <View style={styles.commentInputContainer}>
+          <TextInput
+            style={styles.commentInput}
+            placeholder='Write a comment...'
+            value={newComment}
+            onChangeText={setNewComment}
+          />
+          <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
+            <PaperPlaneTilt size={24} color='white' />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 80, // Add extra padding at the bottom for the fixed input
+  },
+
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 8 },
   author: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
   authorText: { marginLeft: 8, fontSize: 16, color: '#555' },
@@ -272,13 +292,17 @@ const styles = StyleSheet.create({
     color: '#333',
     lineHeight: 20,
   },
-  // Update the commentInputContainer style
   commentInputContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 16,
-    paddingHorizontal: 12,
+    padding: 12,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
   },
   commentInput: {
     flex: 1,
