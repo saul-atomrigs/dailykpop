@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   floatingBtnContainer: {
     justifyContent: 'center',
     paddingHorizontal: 20,
-    top: Platform.OS === 'ios' ? 20 : 0,
+    top: Platform.OS === 'ios' ? 10 : 0,
   },
   floatingBtn: {
     borderWidth: 1,
