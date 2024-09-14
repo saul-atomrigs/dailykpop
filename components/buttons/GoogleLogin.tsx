@@ -1,109 +1,79 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
-import { useRouter } from 'expo-router';
-import { auth } from '@/firebaseConfig';
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import {
-  GoogleAuthProvider,
-  signInWithCredential,
-  type User,
-} from 'firebase/auth';
-import { GoogleLogo } from 'phosphor-react-native';
+  GoogleSignin,
+  statusCodes,
+  isSuccessResponse,
+  isErrorWithCode,
+} from '@react-native-google-signin/google-signin';
+import { useState } from 'react';
+import { Button } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-WebBrowser.maybeCompleteAuthSession();
+export default function GoogleLogin() {
+  GoogleSignin.configure();
+  const [userInfo, setUserInfo] = useState<any>(null); // Updated state variable
 
-export default function App() {
-  const router = useRouter();
+  const signIn = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem('@dailykpop-user');
 
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
-    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-  });
+      if (!storedUser) {
+        console.log('Attempting to sign in with Google');
+        await GoogleSignin.hasPlayServices();
+        const response = await GoogleSignin.signIn();
+        console.log('Response from Google Signin:', response);
 
-  const handleSignInWithGoogle = async () => {
-    const user = await AsyncStorage.getItem('@dailykpop-user');
-    if (!user) {
-      if (response?.type === 'success') {
-        const { id_token } = response.params;
-        const credential = GoogleAuthProvider.credential(id_token);
-
-        try {
-          const result = await signInWithCredential(auth, credential);
-          const userData = result.user;
-
-          await AsyncStorage.setItem('@dailykpop-user', userData.uid);
-          console.log('Google User signed in:', userData);
-
-          router.push({
-            pathname: '/',
-            params: { param: userData.uid },
-          });
-        } catch (error) {
-          console.log('Google Sign-In Error: ', error);
+        if (isSuccessResponse(response) && response.data?.user) {
+          console.log('response', response);
+          console.log('response.user', response.data.user);
+          const user = response.data.user; // Store user data from the response
+          setUserInfo(user); // Update state with user info
+          await AsyncStorage.setItem('@dailykpop-user', user.id); // Save user ID to AsyncStorage
+          console.log('User successfully signed in:', user);
+        } else {
+          console.log('Sign in cancelled');
         }
+      } else {
+        console.log('User already signed in:', storedUser);
       }
-    } else {
-      console.log('User already signed in:', user);
+    } catch (error) {
+      console.log('Error with Google Signin:', error);
+      if (isErrorWithCode(error)) {
+        switch (error.code) {
+          case statusCodes.IN_PROGRESS:
+            console.log('Operation already in progress');
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            console.log('Play services not available or outdated');
+            break;
+          default:
+            console.log('Some other error occurred');
+        }
+      } else {
+        console.log('An error that is not related to Google Signin occurred');
+      }
     }
   };
 
-  useEffect(() => {
-    handleSignInWithGoogle();
-  }, [response]);
-
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem('@dailykpop-user');
-    router.push({ pathname: '/' });
+  const signOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      setUserInfo(null); // Clear the state after sign-out
+      console.log('User signed out');
+    } catch (error) {
+      console.error('Error during sign-out:', error);
+    }
   };
 
   return (
-    <View style={styles.googleContainer}>
-      <TouchableOpacity
-        disabled={!request}
-        onPress={() => {
-          promptAsync();
-        }}
-        style={styles.googleBtn}
-      >
-        <GoogleLogo
-          weight='bold'
-          color='red'
-          size={20}
-          style={styles.googleLogo}
-        />
-        <Text style={styles.btnText}>Continue with Google</Text>
-      </TouchableOpacity>
-      <Button title='logout' onPress={() => handleLogout()} />
-    </View>
+    <>
+      <GoogleSigninButton
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={() => signIn()}
+      />
+      <Button title='Sign Out' onPress={() => signOut()} />
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  googleContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  googleBtn: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 200,
-    height: 50,
-    borderRadius: 5,
-    borderWidth: 1,
-    marginTop: 10,
-    backgroundColor: '#fff',
-    borderColor: '#7a7a7a',
-  },
-  googleLogo: {
-    justifyContent: 'center',
-    marginHorizontal: 5,
-  },
-  btnText: {
-    fontSize: 15,
-    fontWeight: '500',
-  },
-});
