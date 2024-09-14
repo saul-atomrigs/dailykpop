@@ -166,7 +166,16 @@ export default function DetailedFeed() {
 
   const renderItem = ({ item }) => (
     <View style={styles.comment}>
-      <Text style={styles.commentText}>{item.comment}</Text>
+      <UserSquare size={24} color='black' />
+      <View style={styles.commentContent}>
+        <View style={styles.commentHeader}>
+          <Text style={styles.authorName}>
+            {/* get the 3 last digits of author id */}
+            {'fan' + item.author_id.slice(-3) || 'Anonymous'}
+          </Text>
+        </View>
+        <Text style={styles.commentText}>{item.comment}</Text>
+      </View>
     </View>
   );
 
@@ -209,7 +218,7 @@ export default function DetailedFeed() {
               onChangeText={setNewComment}
             />
             <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
-              <PaperPlaneTilt size={24} color='black' />
+              <PaperPlaneTilt size={24} color='white' />
             </TouchableOpacity>
           </View>
         }
@@ -235,25 +244,56 @@ const styles = StyleSheet.create({
   commentSection: { marginTop: 24 },
   commentTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 12 },
   comment: {
-    paddingVertical: 8,
+    flexDirection: 'row',
+    padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#e0e0e0',
+    backgroundColor: '#f9f9f9',
+    marginVertical: 4,
+    borderRadius: 8,
   },
-  commentText: { fontSize: 16, color: '#555' },
+  commentContent: {
+    flex: 1,
+  },
+  commentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  authorName: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#333',
+  },
+
+  commentText: {
+    fontSize: 15,
+    color: '#333',
+    lineHeight: 20,
+  },
+  // Update the commentInputContainer style
   commentInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 16,
+    marginBottom: 16,
+    paddingHorizontal: 12,
   },
   commentInput: {
     flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 8,
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     fontSize: 16,
+    backgroundColor: '#fff',
   },
   sendButton: {
-    marginLeft: 8,
+    marginLeft: 12,
+    backgroundColor: '#007AFF',
+    borderRadius: 20,
+    padding: 8,
   },
 });
