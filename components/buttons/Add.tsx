@@ -1,7 +1,13 @@
 import { useRouter } from 'expo-router';
 import { Plus } from 'phosphor-react-native';
 import React from 'react';
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function AddButton({ routeName }: { routeName: string }) {
   const router = useRouter();
@@ -11,7 +17,7 @@ export default function AddButton({ routeName }: { routeName: string }) {
         style={styles.floatingBtn}
         onPress={() => router.push(routeName)}
       >
-        <Plus color='white' weight='bold' />
+        <Text style={styles.floatingBtnText}>Add</Text>
       </TouchableOpacity>
     </View>
   );

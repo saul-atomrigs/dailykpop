@@ -16,6 +16,7 @@ import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
 import LoginPage from './login';
 import { useAuth } from '@/hooks/useAuth';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface NewPost {
   title: string;
@@ -119,7 +120,7 @@ export default function AddFeed() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder='Post Title'
@@ -151,7 +152,7 @@ export default function AddFeed() {
         onPress={handleAddPost}
         disabled={loading}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
