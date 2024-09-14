@@ -7,9 +7,12 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { UserSquare, Heart } from 'phosphor-react-native';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/supabaseClient';
 
 export default function DetailedFeed() {
   const {
@@ -27,6 +30,8 @@ export default function DetailedFeed() {
     return rawComments ? JSON.parse(rawComments as string) : [];
   });
 
+  const { userId, isAuthenticated } = useAuth(); // Use the useAuth hook
+
   useEffect(() => {
     console.log('Post Params:', {
       id,
@@ -36,15 +41,70 @@ export default function DetailedFeed() {
       likes,
       comments,
     });
-  }, [id, title, content, image_url, likes, comments]);
 
-  const toggleLike = () => {
-    if (liked) {
-      setLikes(likes - 1);
-    } else {
-      setLikes(likes + 1);
+    // Check if the current user has liked this post
+    if (isAuthenticated && userId) {
+      checkUserLike();
     }
-    setLiked(!liked);
+  }, [id, title, content, image_url, likes, comments, isAuthenticated, userId]);
+
+  const checkUserLike = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('likes')
+        .select('*')
+        .eq('post_id', id)
+        .eq('user_id', userId)
+        .single();
+
+      if (error) throw error;
+
+      setLiked(!!data);
+    } catch (error) {
+      console.error('Error checking user like:', error);
+    }
+  };
+
+  const toggleLike = async () => {
+    if (!isAuthenticated) {
+      Alert.alert('Authentication Required', 'Please log in to like posts.');
+      return;
+    }
+
+    try {
+      if (liked) {
+        // Remove like
+        const { error } = await supabase
+          .from('likes')
+          .delete()
+          .eq('post_id', id)
+          .eq('user_id', userId);
+
+        if (error) throw error;
+
+        setLikes(likes - 1);
+        setLiked(false);
+      } else {
+        // Add like
+        const { error } = await supabase
+          .from('likes')
+          .insert({ post_id: id, user_id: userId });
+
+        if (error) throw error;
+
+        setLikes(likes + 1);
+        setLiked(true);
+      }
+
+      // Update the total likes count in the posts table
+      await supabase
+        .from('posts')
+        .update({ likes: likes + (liked ? -1 : 1) })
+        .eq('id', id);
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      Alert.alert('Error', 'Failed to update like status. Please try again.');
+    }
   };
 
   return (

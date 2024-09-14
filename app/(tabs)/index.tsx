@@ -31,12 +31,6 @@ export default function Feed() {
 
   async function fetchPosts() {
     try {
-      const userId = await AsyncStorage.getItem('@dailykpop-user');
-      if (!userId) {
-        console.log('No user ID found');
-        return;
-      }
-
       const { data, error } = await supabase
         .from('posts')
         .select('*')
