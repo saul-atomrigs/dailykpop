@@ -6,13 +6,17 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  FlatList,
   Alert,
+  FlatList,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { UserSquare, Heart } from 'phosphor-react-native';
+import { UserSquare, Heart, PaperPlaneTilt } from 'phosphor-react-native';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/supabaseClient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DetailedFeed() {
   const {
@@ -26,44 +30,51 @@ export default function DetailedFeed() {
 
   const [likes, setLikes] = useState(initialLikes ? Number(initialLikes) : 0);
   const [liked, setLiked] = useState(false);
-  const [comments, setComments] = useState(() => {
-    return rawComments ? JSON.parse(rawComments as string) : [];
-  });
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
 
-  const { userId, isAuthenticated } = useAuth(); // Use the useAuth hook
+  const { userId, isAuthenticated } = useAuth();
 
   useEffect(() => {
-    console.log('Post Params:', {
-      id,
-      title,
-      content,
-      image_url,
-      likes,
-      comments,
-    });
+    const checkIfLiked = async () => {
+      if (!id || !userId) return;
 
-    // Check if the current user has liked this post
-    if (isAuthenticated && userId) {
-      checkUserLike();
-    }
-  }, [id, title, content, image_url, likes, comments, isAuthenticated, userId]);
-
-  const checkUserLike = async () => {
-    try {
       const { data, error } = await supabase
-        .from('likes')
-        .select('*')
-        .eq('post_id', id)
-        .eq('user_id', userId)
+        .from('posts')
+        .select('liked_by')
+        .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching liked_by:', error);
+        return;
+      }
 
-      setLiked(!!data);
-    } catch (error) {
-      console.error('Error checking user like:', error);
-    }
-  };
+      if (data.liked_by && data.liked_by.includes(userId)) {
+        setLiked(true);
+      }
+    };
+
+    const fetchComments = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('comments')
+          .select('*')
+          .eq('post_id', id)
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        setComments(data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+        Alert.alert('Error', 'Failed to fetch comments. Please try again.');
+      }
+    };
+
+    checkIfLiked();
+    fetchComments();
+  }, [id, userId]);
 
   const toggleLike = async () => {
     if (!isAuthenticated) {
@@ -72,93 +83,172 @@ export default function DetailedFeed() {
     }
 
     try {
+      const { data: postData, error: fetchError } = await supabase
+        .from('posts')
+        .select('liked_by, likes')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      let updatedLikedBy = [...(postData.liked_by || [])];
+      let updatedLikes = postData.likes;
+
       if (liked) {
-        // Remove like
-        const { error } = await supabase
-          .from('likes')
-          .delete()
-          .eq('post_id', id)
-          .eq('user_id', userId);
-
-        if (error) throw error;
-
-        setLikes(likes - 1);
-        setLiked(false);
+        updatedLikedBy = updatedLikedBy.filter((user) => user !== userId);
+        updatedLikes -= 1;
       } else {
-        // Add like
-        const { error } = await supabase
-          .from('likes')
-          .insert({ post_id: id, user_id: userId });
-
-        if (error) throw error;
-
-        setLikes(likes + 1);
-        setLiked(true);
+        updatedLikedBy.push(userId);
+        updatedLikes += 1;
       }
 
-      // Update the total likes count in the posts table
-      await supabase
+      const { error } = await supabase
         .from('posts')
-        .update({ likes: likes + (liked ? -1 : 1) })
+        .update({ liked_by: updatedLikedBy, likes: updatedLikes })
         .eq('id', id);
+
+      if (error) throw error;
+
+      setLikes(updatedLikes);
+      setLiked(!liked);
     } catch (error) {
       console.error('Error toggling like:', error);
       Alert.alert('Error', 'Failed to update like status. Please try again.');
     }
   };
 
+  const submitComment = async () => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        'Authentication Required',
+        'Please log in to submit a comment.'
+      );
+      return;
+    }
+
+    if (!newComment.trim()) {
+      Alert.alert('Empty Comment', 'Comment cannot be empty.');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .insert([
+          {
+            post_id: id,
+            comment: newComment,
+            author_id: userId,
+            created_at: new Date().toISOString(),
+          },
+        ])
+        .select();
+
+      if (error) throw error;
+
+      if (Array.isArray(data) && data.length > 0) {
+        const newCommentObj = data[0];
+        setComments((prevComments) => {
+          return Array.isArray(prevComments)
+            ? [...prevComments, newCommentObj]
+            : [newCommentObj];
+        });
+        setNewComment('');
+      } else {
+        console.error('Unexpected response format:', data);
+        Alert.alert(
+          'Error',
+          'Unexpected response from server. Please try again.'
+        );
+      }
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+      Alert.alert('Error', 'Failed to submit comment. Please try again.');
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.comment}>
+      <UserSquare size={24} color='black' />
+      <View style={styles.commentContent}>
+        <View style={styles.commentHeader}>
+          <Text style={styles.authorName}>
+            {/* get the 3 last digits of author id */}
+            {'fan' + item.author_id.slice(-3) || 'Anonymous'}
+          </Text>
+        </View>
+        <Text style={styles.commentText}>{item.comment}</Text>
+      </View>
+    </View>
+  );
+
   return (
-    <ScrollView style={styles.container}>
-      {/* Title */}
-      <Text style={styles.title}>{title}</Text>
-
-      {/* Author */}
-      <View style={styles.author}>
-        <UserSquare size={24} color='black' />
-        <Text style={styles.authorText}>Author</Text>
-      </View>
-
-      {/* Content */}
-      <Text style={styles.content}>{content}</Text>
-
-      {/* Image if any */}
-      {image_url && (
-        <Image source={{ uri: image_url as string }} style={styles.image} />
-      )}
-
-      {/* Like Button */}
-      <View style={styles.likeContainer}>
-        <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
-          <Heart size={24} color={liked ? 'red' : 'black'} />
-          <Text style={styles.likeText}> {likes} Likes </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Comments Section */}
-      <View style={styles.commentSection}>
-        <Text style={styles.commentTitle}>Comments</Text>
-
-        {/* Render comments */}
-        {comments.length > 0 ? (
-          <FlatList
-            data={comments}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.comment}>
-                <Text style={styles.commentText}>{item.comment}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <FlatList
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps='handled'
+          ListHeaderComponent={
+            <>
+              <Text style={styles.title}>{title}</Text>
+              <View style={styles.author}>
+                <UserSquare size={24} color='black' />
+                <Text style={styles.authorText}>Author</Text>
               </View>
-            )}
+              <Text style={styles.content}>{content}</Text>
+              {image_url && (
+                <Image
+                  source={{ uri: image_url as string }}
+                  style={styles.image}
+                />
+              )}
+              <View style={styles.likeContainer}>
+                <TouchableOpacity
+                  onPress={toggleLike}
+                  style={styles.likeButton}
+                >
+                  <Heart size={24} color={liked ? 'red' : 'black'} />
+                  <Text style={styles.likeText}> {likes} Likes </Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.commentTitle}>Comments</Text>
+            </>
+          }
+          data={comments}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
+        <View style={styles.commentInputContainer}>
+          <TextInput
+            style={styles.commentInput}
+            placeholder='Write a comment...'
+            value={newComment}
+            onChangeText={setNewComment}
           />
-        ) : (
-          <Text>No comments yet.</Text>
-        )}
-      </View>
-    </ScrollView>
+          <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
+            <PaperPlaneTilt size={24} color='white' />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 80, // Add extra padding at the bottom for the fixed input
+  },
+
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 8 },
   author: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
   authorText: { marginLeft: 8, fontSize: 16, color: '#555' },
@@ -174,9 +264,60 @@ const styles = StyleSheet.create({
   commentSection: { marginTop: 24 },
   commentTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 12 },
   comment: {
-    paddingVertical: 8,
+    flexDirection: 'row',
+    padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#e0e0e0',
+    backgroundColor: '#f9f9f9',
+    marginVertical: 4,
+    borderRadius: 8,
   },
-  commentText: { fontSize: 16, color: '#555' },
+  commentContent: {
+    flex: 1,
+  },
+  commentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  authorName: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#333',
+  },
+
+  commentText: {
+    fontSize: 15,
+    color: '#333',
+    lineHeight: 20,
+  },
+  commentInputContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  commentInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    backgroundColor: '#fff',
+  },
+  sendButton: {
+    marginLeft: 12,
+    backgroundColor: '#007AFF',
+    borderRadius: 20,
+    padding: 8,
+  },
 });
