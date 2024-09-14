@@ -157,6 +157,7 @@ export default function DetailedFeed() {
   return (
     <View style={styles.container}>
       <FlatList
+        keyboardShouldPersistTaps='handled'
         ListHeaderComponent={
           <>
             {/* Title */}
