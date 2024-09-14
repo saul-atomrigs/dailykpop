@@ -17,7 +17,7 @@ export default function Explore() {
   const router = useRouter();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <SectionList
         sections={sectionData}
         keyExtractor={(item, index) => item + index}
@@ -27,8 +27,6 @@ export default function Explore() {
         renderItem={({ item }) => (
           <Text
             style={styles.item}
-            // onPress={() => router.push('DetailedDiscover', { param: item })}
-            // onPress={() => router.push('/explorePage')}
             onPress={() =>
               router.push({ pathname: '/explorePage', params: { param: item } })
             }
@@ -47,7 +45,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    marginBottom: 80,
     backgroundColor: '#fff',
   },
   sectionHeader: {
