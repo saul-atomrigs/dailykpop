@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -74,16 +75,24 @@ export default function Feed() {
               >
                 <View style={styles.post}>
                   <View style={styles.content}>
-                    <Text style={styles.title}>
-                      {post.title.length > 80
-                        ? post.title.substring(0, 80) + '...'
-                        : post.title}
-                    </Text>
-                    <Text style={styles.text}>
-                      {post.content.length > 120
-                        ? post.content.substring(0, 120) + '...'
-                        : post.content}
-                    </Text>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.title}>
+                        {post.title.length > 80
+                          ? post.title.substring(0, 80) + '...'
+                          : post.title}
+                      </Text>
+                      <Text style={styles.text}>
+                        {post.content.length > 120
+                          ? post.content.substring(0, 120) + '...'
+                          : post.content}
+                      </Text>
+                    </View>
+                    {post.image_url && (
+                      <Image
+                        style={styles.image}
+                        source={{ uri: post.image_url as string }}
+                      />
+                    )}
                   </View>
                   <View style={styles.postFooter}>
                     <Text style={styles.createdAt}>
@@ -124,12 +133,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   content: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginHorizontal: 20,
     marginVertical: 20,
+  },
+  textContainer: {
+    width: '65%',
   },
   title: {
     fontSize: 16,
     color: '#02007F',
+  },
+  image: {
+    width: '30%',
+    height: 100,
+    borderRadius: 10,
   },
   text: {
     fontSize: 14,
@@ -140,7 +159,7 @@ const styles = StyleSheet.create({
   postFooter: {
     marginTop: 10,
     flexDirection: 'row',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   stat: {
     flexDirection: 'row',
@@ -149,6 +168,7 @@ const styles = StyleSheet.create({
   },
   statDetails: {
     padding: 5,
+    marginBottom: 10,
     backgroundColor: '#eee',
     borderRadius: 13,
     marginHorizontal: 5,
