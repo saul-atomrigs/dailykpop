@@ -7,13 +7,13 @@
       "developmentClient": true,
       "distribution": "internal"
     },
-    "release": {
+    "production": {
       "distribution": "store",
       "autoIncrement": true
     }
   },
   "submit": {
-    "release": {
+    "production": {
       "android": {
         "serviceAccountKeyPath": ".scripts/dailykpop-ee1e3-1ad31445df5d.json",
         "track": "production"

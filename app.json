@@ -3,12 +3,15 @@
     "name": "dailykpop",
     "slug": "dailykpop",
     "version": "2.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/adaptive-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/adaptive-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,7 +19,7 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "usesAppleSignIn": true,
-      "bundleIdentifier": "com.dailykpop",
+      "bundleIdentifier": "app.dailykpop",
       "buildNumber": "2.0.0"
     },
     "android": {
@@ -25,7 +28,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.dailykpop",
+      "package": "app.dailykpop",
       "versionCode": 2
     },
     "web": {

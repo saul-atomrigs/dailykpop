@@ -26,7 +26,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
-        <data android:scheme="com.dailykpop"/>
+        <data android:scheme="app.dailykpop"/>
         <data android:scheme="exp+dailykpop"/>
       </intent-filter>
     </activity>

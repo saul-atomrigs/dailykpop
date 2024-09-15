@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.dailykpop</string>
+	<string>app.dailykpop</string>
 	<key>PROJECT_ID</key>
 	<string>dailykpop-ee1e3</string>
 	<key>STORAGE_BUCKET</key>

@@ -30,7 +30,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>myapp</string>
-          <string>com.dailykpop</string>
+          <string>app.dailykpop</string>
         </array>
       </dict>
       <dict>

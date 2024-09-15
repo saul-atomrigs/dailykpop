@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:634344250588:android:f17b8ee8c6e0279458e819",
         "android_client_info": {
-          "package_name": "com.dailykpop"
+          "package_name": "app.dailykpop"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "634344250588-dhqb4iuf0ou9960p1itmkmlopq98nqr0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.dailykpop",
+            "package_name": "app.dailykpop",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
@@ -42,7 +42,7 @@
               "client_id": "634344250588-crb3joqhnvffb934leqmg9u5dmqedhhc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.dailykpop"
+                "bundle_id": "app.dailykpop"
               }
             }
           ]
