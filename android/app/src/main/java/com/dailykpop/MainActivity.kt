@@ -1,4 +1,4 @@
-package com.dailykpop
+package app.dailykpop
 
 import android.os.Build
 import android.os.Bundle
