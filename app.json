@@ -2,7 +2,7 @@
   "expo": {
     "name": "dailykpop",
     "slug": "dailykpop",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -20,7 +20,7 @@
       "supportsTablet": true,
       "usesAppleSignIn": true,
       "bundleIdentifier": "app.dailykpop",
-      "buildNumber": "2.0.1"
+      "buildNumber": "2.0.2"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
