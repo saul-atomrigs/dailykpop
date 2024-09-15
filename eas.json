@@ -1,11 +1,23 @@
 {
+  "cli": {
+    "appVersionSource": "remote"
+  },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal"
     },
     "release": {
-      "distribution": "store"
+      "distribution": "store",
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "release": {
+      "android": {
+        "serviceAccountKeyPath": ".scripts/dailykpop-ee1e3-1ad31445df5d.json",
+        "track": "production"
+      }
     }
   }
 }

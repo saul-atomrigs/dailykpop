@@ -2,7 +2,7 @@
   "expo": {
     "name": "dailykpop",
     "slug": "dailykpop",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -16,7 +16,8 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "usesAppleSignIn": true,
-      "bundleIdentifier": "com.dailykpop"
+      "bundleIdentifier": "com.dailykpop",
+      "buildNumber": "2.0.0"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -24,7 +25,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.dailykpop"
+      "package": "com.dailykpop",
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",
