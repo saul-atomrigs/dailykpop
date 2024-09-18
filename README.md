@@ -1,5 +1,9 @@
 ### 🍏 [Published on App Store](https://apps.apple.com/kr/app/dailykpop/id1601186004) | 🤖 [Published on Google Play](https://play.google.com/store/apps/details?id=app.dailykpop)
 
+# Tech Stack
+- Frontend: React Native, TypeScript
+- Backend: Supabase (database, storage), Firebase (auth)
+
 # Versioning
 
 - 0.2.5 (2024.09.15): Submit to Google Play & App Store
