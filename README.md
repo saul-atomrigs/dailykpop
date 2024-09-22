@@ -1,10 +1,21 @@
-### 🍏 [Published on App Store](https://apps.apple.com/kr/app/dailykpop/id1601186004) | 🤖 [Published on Google Play](https://play.google.com/store/apps/details?id=app.dailykpop)
+<div align="center">
+    <br />
+    <h2> DailyKpop </h2>
+    <a href="https://apps.apple.com/kr/app/dailykpop/id1601186004">🍏 [Published on App Store]</a>
+    <a href="https://play.google.com/store/apps/details?id=app.dailykpop"> 🤖 [Published on Google Play]</a>
+    <br /><br />
+    <img src="https://img.shields.io/badge/release-2.0.2-8F84ED"> 
+    <br /><br />
+    <img src="https://img.shields.io/badge/TypeScript-5.3.3-3178C6?logo=typescript">
+    <img src="https://img.shields.io/badge/Supabase-2.45.3-339933?logo=supabase"> 
+    <img src="https://img.shields.io/badge/React%20Native-0.74.5-61DAFB?logo=React"> 
+    <br /><br />
+    <img src="https://img.shields.io/badge/Firebase-10.13.1-61DAFB?logo=firebase"> 
+    <img src="https://img.shields.io/badge/Expo-51.0.28-61DAFB?logo=expo"> 
+    <img src="https://img.shields.io/badge/Jest-29.2.1-339933?logo=jest"> 
+</div>
 
-# Tech Stack
-- Frontend: React Native, TypeScript
-- Backend: Supabase (database, storage), Firebase (auth)
-
-# Versioning
+# Versioning (CHANGELOG)
 
 - 0.2.5 (2024.09.15): Submit to Google Play & App Store
 - 0.2.4 (2024.09.14): Thumbnail image in the Community list
