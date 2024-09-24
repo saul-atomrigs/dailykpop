@@ -38,10 +38,6 @@ export default function RootLayout() {
         <Stack.Screen name='ExplorePage' options={{ headerShown: false }} />
         <Stack.Screen name='detailedFeed' options={{ headerShown: false }} />
         <Stack.Screen name='addFeed' options={{ headerShown: false }} />
-        <Stack.Screen
-          name='detailedSchedule'
-          options={{ headerShown: false }}
-        />
         <Stack.Screen name='addSchedule' options={{ headerShown: false }} />
         <Stack.Screen name='+not-found' />
       </Stack>
