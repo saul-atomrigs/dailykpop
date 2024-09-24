@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { NewPost } from '@/types';
-import LoginPage from '@/app/login';
+import LoginPage from '@/app/LoginPage';
 import { useAuth, useImagePicker, useAddPost } from '@/hooks';
 
 /**
