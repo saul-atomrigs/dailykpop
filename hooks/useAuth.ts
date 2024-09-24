@@ -7,7 +7,7 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
-export const useAuth = (): AuthState => {
+const useAuth = (): AuthState => {
   const [authState, setAuthState] = useState<AuthState>({
     userId: null,
     isLoading: true,
@@ -74,3 +74,5 @@ export const useAuth = (): AuthState => {
 
   return { ...authState, signIn, signOut };
 };
+
+export default useAuth;

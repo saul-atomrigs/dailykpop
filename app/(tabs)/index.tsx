@@ -115,7 +115,7 @@ export default function Feed() {
           ))}
         </View>
       </ScrollView>
-      <AddButton routeName='/addFeed' />
+      <AddButton routeName='/AddFeed' />
     </SafeAreaView>
   );
 }
