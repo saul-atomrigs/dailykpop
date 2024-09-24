@@ -1,45 +1,52 @@
-import React, { useState } from 'react';
-import SocialIcon from '@/components/SocialIcon';
-import { useLocalSearchParams } from 'expo-router';
+import React, { useState, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
 
+import SocialIcon from '@/components/SocialIcon';
+import {
+  BASE_URL,
+  PLATFORM_NAMES,
+  PLATFORM_COLORS,
+} from '@/constants';
+
+/**
+ * KPOP 아이돌 SNS 및 뉴스를 접할 수 있는 페이지
+ */
 export default function ExplorePage() {
   const { param } = useLocalSearchParams();
+  
+  /**
+   * 소셜 플랫폼 목록
+   */
+  const socialPlatforms = useMemo(() => [
+    { name: PLATFORM_NAMES.YOUTUBE, baseUrl: BASE_URL.YOUTUBE, color: PLATFORM_COLORS.YOUTUBE },
+    { name: PLATFORM_NAMES.X, baseUrl: BASE_URL.X, color: PLATFORM_COLORS.X },
+    { name: PLATFORM_NAMES.REDDIT, baseUrl: BASE_URL.REDDIT, color: PLATFORM_COLORS.REDDIT },
+    { name: PLATFORM_NAMES.NEWS, baseUrl: BASE_URL.NEWS, color: PLATFORM_COLORS.NEWS },
+  ].map(platform => ({
+    ...platform,
+    url: `${platform.baseUrl}${param}`
+  })), [param]);
 
-  const xQuery = 'https://x.com/search?q=' + param;
-  const youtubeQuery = 'https://www.youtube.com/results?search_query=' + param;
-  const redditQuery = 'https://www.reddit.com/search/?q=' + param;
-  const newsQuery = 'https://news.google.com/search?q=' + param;
-
-  const [currentUrl, setCurrentUrl] = useState(youtubeQuery);
+  const [currentUrl, setCurrentUrl] = useState(socialPlatforms[0].url);
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* 소셜 아이콘 바 */}
       <View style={styles.tabBar}>
-        <SocialIcon
-          text='Youtube'
-          backgroundColor='red'
-          onPress={() => setCurrentUrl(youtubeQuery)}
-        />
-        <SocialIcon
-          text='X'
-          backgroundColor='black'
-          onPress={() => setCurrentUrl(xQuery)}
-        />
-        <SocialIcon
-          text='reddit'
-          backgroundColor='gray'
-          onPress={() => setCurrentUrl(redditQuery)}
-        />
-        <SocialIcon
-          text='news'
-          backgroundColor='gray'
-          onPress={() => setCurrentUrl(newsQuery)}
-        />
+        {socialPlatforms.map((platform) => (
+          <SocialIcon
+            key={platform.name}
+            text={platform.name}
+            backgroundColor={platform.color}
+            onPress={() => setCurrentUrl(platform.url)}
+          />
+        ))}
       </View>
 
+      {/* sns/뉴스 웹뷰 */}
       <View style={styles.webViewContainer}>
         <WebView style={styles.webView} source={{ uri: currentUrl }} />
       </View>

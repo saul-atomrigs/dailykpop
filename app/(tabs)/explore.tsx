@@ -28,7 +28,7 @@ export default function Explore() {
           <Text
             style={styles.item}
             onPress={() =>
-              router.push({ pathname: '/explorePage', params: { param: item } })
+              router.push({ pathname: '/ExplorePage', params: { param: item } })
             }
           >
             {item}
