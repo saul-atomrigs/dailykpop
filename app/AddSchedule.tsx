@@ -8,11 +8,11 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Picker } from '@react-native-picker/picker';
-import { supabase } from '../supabaseClient'; // import your supabase client
-import { useRouter } from 'expo-router';
-import { kpopGroups } from '@/lib/kpopGroups';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+
+import { AddButton, WheelPicker } from '@/components';
+import { supabase } from '@/supabaseClient';
 
 export default function AddSchedule() {
   const initialValues = {
@@ -28,21 +28,21 @@ export default function AddSchedule() {
 
   const router = useRouter();
 
-  // Show and hide date picker
+  /** 날짜 선택 기능 보여주기/숨기기 */
   const showDatePicker = () => setDatePickerVisibility(true);
   const hideDatePicker = () => setDatePickerVisibility(false);
 
-  const handleConfirm = (date) => {
+  const handleConfirm = (date: Date) => {
     hideDatePicker();
     onChangeText(new Date(date).toISOString().split('T')[0]);
     setValues({ ...values, date: new Date(date).toISOString().split('T')[0] });
   };
 
-  // Update input fields when they change
-  const handleInputChange = (key, value) =>
+  /** 입력 필드 업데이트 */
+  const handleInputChange = (key: string, value: string) =>
     setValues({ ...values, [key]: value });
 
-  // Create item
+  /** 아이템 생성 */
   const addItem = async () => {
     try {
       const { data, error } = await supabase
@@ -60,34 +60,11 @@ export default function AddSchedule() {
     }
   };
 
-  // WheelPicker component
-  const WheelPicker = () => {
-    const [selectedIndex, setSelectedIndex] = useState('');
-    const onValueChange = (itemValue) => setSelectedIndex(itemValue);
-    const confirmArtist = () => setValues({ ...values, artist: selectedIndex });
-
-    return (
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedIndex}
-          onValueChange={onValueChange}
-          style={styles.picker}
-        >
-          {kpopGroups.map((value, index) => (
-            <Picker.Item label={value} value={value} key={index} />
-          ))}
-        </Picker>
-        <TouchableOpacity onPress={confirmArtist} style={styles.confirm}>
-          <Text>Confirm</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAwareScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
+          {/* 아이돌 선택 */}
           <TextInput
             value={values.artist}
             onChangeText={(value) => handleInputChange('artist', value)}
@@ -95,8 +72,13 @@ export default function AddSchedule() {
             style={styles.textInput}
             placeholderTextColor='#666'
           />
-          <WheelPicker />
-
+          {/* 아이돌 선택 원형 휠 피커 */}
+          <WheelPicker
+            selectedValue={values.artist}
+            onValueChange={(value) => setValues({ ...values, artist: value })}
+            onConfirm={() => {}}
+          />
+          {/* 날짜 선택 */}
           <TouchableOpacity onPress={showDatePicker}>
             <View pointerEvents='none'>
               <TextInput
@@ -107,6 +89,7 @@ export default function AddSchedule() {
                 editable={false}
               />
             </View>
+            {/* 날짜 선택 모달 */}
             <DateTimePickerModal
               headerTextIOS='1. When is it happening?'
               isVisible={datePickerVisible}
@@ -116,6 +99,7 @@ export default function AddSchedule() {
             />
           </TouchableOpacity>
 
+          {/* 이벤트 선택 */}
           <TextInput
             value={values.event}
             onChangeText={(value) => handleInputChange('event', value)}
@@ -124,16 +108,15 @@ export default function AddSchedule() {
             placeholderTextColor='#666'
           />
 
+          {/* 추가 버튼 */}
           <View style={styles.buttonWrapper}>
-            <TouchableOpacity
-              style={styles.addButton}
+            <AddButton
+              title='Add to Calendar'
               onPress={() => {
                 addItem();
                 router.push('/calendar');
               }}
-            >
-              <Text style={styles.addButtonText}>Add to Calendar</Text>
-            </TouchableOpacity>
+            />
           </View>
         </View>
       </KeyboardAwareScrollView>
@@ -180,8 +163,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonWrapper: {
-    marginTop: 'auto', // Pushes the button to the bottom of the container
-    paddingVertical: 20, // Adds space between the button and the last TextInput
+    marginTop: 'auto',
+    paddingVertical: 20,
     width: '100%',
     alignItems: 'center',
   },

@@ -13,7 +13,7 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import { supabase } from '../../supabaseClient';
 import { auth } from '@/firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AddButton from '@/components/buttons/Add';
+import { AddButton } from '@/components';
 
 export default function Calendar() {
   const [items, setItems] = useState([]);
@@ -157,7 +157,7 @@ export default function Calendar() {
         hideExtraDays={false}
       />
 
-      <AddButton routeName='/addSchedule' />
+      <AddButton onPress={() => router.push('/AddSchedule')} />
     </SafeAreaView>
   );
 }

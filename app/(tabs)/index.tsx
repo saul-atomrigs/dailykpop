@@ -12,7 +12,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AddButton from '@/components/buttons/Add';
+import { AddButton } from '@/components';
 import { ChatText, Heart, Plus } from 'phosphor-react-native';
 
 interface Post {
@@ -115,7 +115,7 @@ export default function Feed() {
           ))}
         </View>
       </ScrollView>
-      <AddButton routeName='/AddFeed' />
+      <AddButton onPress={() => router.push('/AddFeed')} />
     </SafeAreaView>
   );
 }

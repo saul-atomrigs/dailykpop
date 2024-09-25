@@ -4,7 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
 
-import SocialIcon from '@/components/SocialIcon';
+import { SocialIcon } from '@/components';
 import {
   BASE_URL,
   PLATFORM_NAMES,
