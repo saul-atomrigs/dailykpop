@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -14,6 +13,9 @@ import { useRouter } from 'expo-router';
 import { AddButton, WheelPicker } from '@/components';
 import { supabase } from '@/supabaseClient';
 
+/**
+ * 일정 추가 페이지
+ */
 export default function AddSchedule() {
   const initialValues = {
     date: '',
