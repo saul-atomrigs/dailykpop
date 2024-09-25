@@ -115,7 +115,9 @@ export default function Feed() {
           ))}
         </View>
       </ScrollView>
-      <AddButton onPress={() => router.push('/AddFeed')} />
+      <View style={styles.addButtonContainer}>
+        <AddButton title='Add Feed' onPress={() => router.push('/AddFeed')} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -175,5 +177,11 @@ const styles = StyleSheet.create({
     fontSize: 10,
     flexDirection: 'row',
     alignItems: 'center', // Ensure icons and text are centered
+  },
+  addButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: -20,
   },
 });

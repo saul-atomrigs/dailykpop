@@ -157,7 +157,9 @@ export default function Calendar() {
         hideExtraDays={false}
       />
 
-      <AddButton onPress={() => router.push('/AddSchedule')} />
+      <View style={styles.addButtonContainer}>
+        <AddButton title='Add Schedule' onPress={() => router.push('/AddSchedule')} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -348,5 +350,11 @@ const styles = StyleSheet.create({
     height: 15,
     flex: 1,
     paddingTop: 30,
+  },
+  addButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: -20,
   },
 });
