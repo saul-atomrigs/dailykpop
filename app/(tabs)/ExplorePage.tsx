@@ -1,18 +1,23 @@
 import React from 'react';
-import { Dimensions, SectionList, StyleSheet, Text } from 'react-native';
+import { SectionList, StyleSheet, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { kpopGroups } from '@/lib/kpopGroups';
 
-const WIDTH = Dimensions.get('window').width;
+import { kpopGroups } from '@/lib/kpopGroups';
+import { WIDTH } from '@/utils';
+import { COMMON_STRINGS } from '@/constants';
+import { ROUTES } from '@/routing';
 
 const sectionData = [
   {
-    header: 'TRENDING',
+    header: COMMON_STRINGS.trending,
     data: kpopGroups,
   },
 ];
 
+/**
+ * 탐색 페이지 (아이돌 뉴스, 영상, SNS 등)
+ */
 export default function Explore() {
   const router = useRouter();
 
@@ -28,7 +33,7 @@ export default function Explore() {
           <Text
             style={styles.item}
             onPress={() =>
-              router.push({ pathname: '/ExplorePage', params: { param: item } })
+              router.push({ pathname: ROUTES.EXPLORE_PAGE, params: { param: item } })
             }
           >
             {item}

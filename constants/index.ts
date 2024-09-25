@@ -18,3 +18,7 @@ export const PLATFORM_COLORS = {
   REDDIT: 'gray',
   NEWS: 'gray',
 };
+
+export const COMMON_STRINGS = {
+  trending: 'Trending'
+}
