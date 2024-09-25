@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  TouchableOpacity,
   Alert,
   FlatList,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { UserSquare, Heart, PaperPlaneTilt } from 'phosphor-react-native';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/supabaseClient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams } from 'expo-router';
 
+import { useAuth } from '@/hooks';
+import { supabase } from '@/supabaseClient';
+import { CommentList, FeedHeader, CommentInput } from '@/components';
+
+/**
+ * 피드 상세 페이지
+ */
 export default function DetailedFeed() {
   const {
     id,
@@ -28,7 +26,7 @@ export default function DetailedFeed() {
     comments: rawComments,
   } = useLocalSearchParams();
 
-  const [likes, setLikes] = useState(initialLikes ? Number(initialLikes) : 0);
+  const [likes, setLikes] = useState(initialLikes ? +(initialLikes) : 0);
   const [liked, setLiked] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -167,20 +165,20 @@ export default function DetailedFeed() {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.comment}>
-      <UserSquare size={24} color='black' />
-      <View style={styles.commentContent}>
-        <View style={styles.commentHeader}>
-          <Text style={styles.authorName}>
-            {/* get the 3 last digits of author id */}
-            {'fan' + item.author_id.slice(-3) || 'Anonymous'}
-          </Text>
-        </View>
-        <Text style={styles.commentText}>{item.comment}</Text>
-      </View>
-    </View>
-  );
+  // const renderItem = ({ item }) => (
+  //   <View style={styles.comment}>
+  //     <UserSquare size={24} color='black' />
+  //     <View style={styles.commentContent}>
+  //       <View style={styles.commentHeader}>
+  //         <Text style={styles.authorName}>
+  //           {/* get the 3 last digits of author id */}
+  //           {'fan' + item.author_id.slice(-3) || 'Anonymous'}
+  //         </Text>
+  //       </View>
+  //       <Text style={styles.commentText}>{item.comment}</Text>
+  //     </View>
+  //   </View>
+  // );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -193,47 +191,25 @@ export default function DetailedFeed() {
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps='handled'
           ListHeaderComponent={
-            <>
-              <Text style={styles.title}>{title}</Text>
-              <View style={styles.author}>
-                <UserSquare size={24} color='black' />
-                <Text style={styles.authorText}>Author</Text>
-              </View>
-              <Text style={styles.content}>{content}</Text>
-              {image_url && (
-                <Image
-                  source={{ uri: image_url as string }}
-                  style={styles.image}
-                />
-              )}
-              <View style={styles.likeContainer}>
-                <TouchableOpacity
-                  onPress={toggleLike}
-                  style={styles.likeButton}
-                >
-                  <Heart size={24} color={liked ? 'red' : 'black'} />
-                  <Text style={styles.likeText}> {likes} Likes </Text>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.commentTitle}>Comments</Text>
-            </>
+            <FeedHeader
+              title={title}
+              content={content}
+              image_url={image_url}
+              likes={likes}
+              liked={liked}
+              toggleLike={toggleLike}
+              isAuthenticated={isAuthenticated}
+            />
           }
           data={comments}
-          renderItem={renderItem}
+          renderItem={({ item }) => <CommentList comment={item} />}
           keyExtractor={(item) => item.id.toString()}
         />
-        <View style={styles.commentInputContainer}>
-          <TextInput
-            style={styles.commentInput}
-            placeholder='Write a comment...'
-            placeholderTextColor={'#555'}
-            value={newComment}
-            onChangeText={setNewComment}
-          />
-          <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
-            <PaperPlaneTilt size={24} color='white' />
-          </TouchableOpacity>
-        </View>
+        <CommentInput
+          newComment={newComment}
+          setNewComment={setNewComment}
+          submitComment={submitComment}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -244,79 +220,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  container: { 
+    flex: 1, 
+    padding: 16, 
+    backgroundColor: '#fff' 
+  },
   scrollContent: {
     padding: 16,
-    paddingBottom: 80, // Add extra padding at the bottom for the fixed input
-  },
-
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 8 },
-  author: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
-  authorText: { marginLeft: 8, fontSize: 16, color: '#555' },
-  content: { fontSize: 16, lineHeight: 24, marginBottom: 16 },
-  image: { width: '100%', height: 200, borderRadius: 8, marginBottom: 16 },
-  likeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginBottom: 24,
-  },
-  likeButton: { flexDirection: 'row', alignItems: 'center' },
-  likeText: { marginLeft: 8, fontSize: 16 },
-  commentSection: { marginTop: 24 },
-  commentTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 12 },
-  comment: {
-    flexDirection: 'row',
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    backgroundColor: '#f9f9f9',
-    marginVertical: 4,
-    borderRadius: 8,
-  },
-  commentContent: {
-    flex: 1,
-  },
-  commentHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  authorName: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    color: '#333',
-  },
-
-  commentText: {
-    fontSize: 15,
-    color: '#333',
-    lineHeight: 20,
-  },
-  commentInputContainer: {
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  },
-  commentInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    backgroundColor: '#fff',
-  },
-  sendButton: {
-    marginLeft: 12,
-    backgroundColor: '#007AFF',
-    borderRadius: 20,
-    padding: 8,
+    paddingBottom: 80,
   },
 });

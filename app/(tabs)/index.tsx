@@ -61,7 +61,7 @@ export default function Feed() {
               <TouchableOpacity
                 onPress={() =>
                   router.push({
-                    pathname: '/detailedFeed',
+                    pathname: '/DetailedFeed',
                     params: {
                       id: post.id,
                       title: post.title,
