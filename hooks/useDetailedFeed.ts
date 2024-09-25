@@ -26,6 +26,9 @@ export default function useDetailedFeed() {
     fetchComments();
   }, [id, userId]);
 
+  /**
+   * 현재 사용자가 해당 피드를 좋아요 했는지 확인하는 함수
+   */
   const checkIfLiked = async () => {
     if (!id || !userId) return;
 
@@ -45,6 +48,9 @@ export default function useDetailedFeed() {
     }
   };
 
+  /**
+   * 피드에 달린 댓글 목록을 가져오는 함수
+   */
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
@@ -62,6 +68,9 @@ export default function useDetailedFeed() {
     }
   };
 
+  /**
+   * 피드의 좋아요 상태를 토글하는 함수
+   */
   const toggleLike = async () => {
     if (!isAuthenticated) {
       Alert.alert('Authentication Required', 'Please log in to like posts.');
@@ -103,6 +112,9 @@ export default function useDetailedFeed() {
     }
   };
 
+  /**
+   * 피드에 댓글을 추가하는 함수
+   */
   const submitComment = async () => {
     if (!isAuthenticated) {
       Alert.alert(

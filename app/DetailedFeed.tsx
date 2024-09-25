@@ -35,6 +35,7 @@ export default function DetailedFeed() {
         style={styles.container}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
+        {/* 화면 상단에 위치한 피드 상세 페이지 UI (댓글 입력창 제외 부분) */}
         <FlatList
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps='handled'
@@ -53,6 +54,7 @@ export default function DetailedFeed() {
           renderItem={({ item }) => <CommentList comment={item} />}
           keyExtractor={(item) => item.id.toString()}
         />
+        {/* 화면 하단에 위치한 댓글 달기 입력창 */}
         <CommentInput
           newComment={newComment}
           setNewComment={setNewComment}
