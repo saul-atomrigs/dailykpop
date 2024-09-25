@@ -16,7 +16,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name='index'
+        name='CommunityPage'
         options={{
           title: 'Community',
           tabBarIcon: ({ color, focused }) => (

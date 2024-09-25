@@ -10,10 +10,10 @@ import {
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/supabaseClient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ChatText, Heart } from 'phosphor-react-native';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AddButton } from '@/components';
-import { ChatText, Heart, Plus } from 'phosphor-react-native';
 
 interface Post {
   id: string;
@@ -26,7 +26,7 @@ interface Post {
   author_id: string;
 }
 
-export default function Feed() {
+export default function CommunityPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const router = useRouter();
 

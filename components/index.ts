@@ -6,3 +6,6 @@ export { default as ThemedView } from './ThemedView';
 export { default as CommentInput } from './CommentInput';
 export { default as CommentList } from './CommentList';
 export { default as FeedHeader } from './FeedHeader';
+export { default as ErrorMessage } from './ErrorMessage';
+export { default as LoadingIndicator } from './LoadingIndicator';
+export { default as Post } from './Post';
