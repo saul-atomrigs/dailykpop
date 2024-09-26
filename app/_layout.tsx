@@ -1,32 +1,34 @@
+import React, { useEffect, useState } from 'react';
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+/** hideAsync가 호출될 때까지 스플래시 스크린을 유지 */
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    if (loaded) {
+    setAppIsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (appIsReady) {
+      /** 스플래시 스크린 제거하고 앱 가동 */
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [appIsReady]);
 
-  if (!loaded) {
+  if (!appIsReady) {
     return null;
   }
 
@@ -35,8 +37,6 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
         <Stack.Screen name='LoginPage' options={{ headerShown: false }} />
-        <Stack.Screen name='ExplorePage' options={{ headerShown: false }} />
-        <Stack.Screen name='CommunityPage' options={{ headerShown: false }} />
         <Stack.Screen name='DetailedFeed' options={{ headerShown: false }} />
         <Stack.Screen name='DetailedExplore' options={{ headerShown: false }} />
         <Stack.Screen name='AddFeed' options={{ headerShown: false }} />
