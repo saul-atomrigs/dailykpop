@@ -15,6 +15,7 @@ import { supabase } from '@/supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AddButton } from '@/components';
 import { useEvents, useVoting } from '@/hooks';
+import { WIDTH } from '@/utils';
 
 /** 
  * 아이돌 스케쥴, 생일, 콘서트 등 이벤트 일정 확인 페이지
@@ -223,8 +224,6 @@ function renderEmptyDate() {
 
 const rowHasChanged = (r1: { text: string }, r2: { text: string }) =>
   r1.text !== r2.text;
-
-const WIDTH = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   safeArea: {
