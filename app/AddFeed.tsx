@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NewPost } from '@/types';
 import LoginPage from '@/app/LoginPage';
 import { useAuth, useImagePicker, useAddPost } from '@/hooks';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 /**
  * 포스팅을 업로드하는 UI 페이지
@@ -43,7 +44,7 @@ export default function AddFeed() {
       <TextInput
         style={styles.input}
         placeholder='Title'
-        placeholderTextColor={'#999'}
+        placeholderTextColor={colors.placeholderText}
         value={post.title}
         onChangeText={(text) => handleInputChange('title', text)}
       />
@@ -51,7 +52,7 @@ export default function AddFeed() {
       <TextInput
         style={[styles.input, styles.textArea]}
         placeholder='Content'
-        placeholderTextColor={'#999'}
+        placeholderTextColor={colors.placeholderText}
         value={post.content}
         onChangeText={(text) => handleInputChange('content', text)}
         multiline
@@ -84,36 +85,38 @@ export default function AddFeed() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-    marginBottom: 20,
+    padding: spacing.md,
+    backgroundColor: colors.background,
+    marginBottom: spacing.lg,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 12,
-    borderRadius: 8,
+    borderWidth: size.lineWidth.micro,
+    borderColor: colors.border,
+    padding: spacing.sm,
+    marginBottom: spacing.md,
+    borderRadius: spacing.sm,
+    fontSize: typography.fontSize.md,
+    color: colors.text,
   },
   textArea: {
-    height: 200,
+    height: size.block.medium,
     textAlignVertical: 'top',
   },
   imagePicker: {
-    backgroundColor: '#eee',
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: colors.inputBackground,
+    padding: spacing.md,
+    borderRadius: spacing.sm,
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: spacing.md,
   },
   imagePickerText: {
-    color: '#007AFF',
-    fontWeight: '600',
+    color: colors.primary,
+    fontWeight: typography.fontWeight.medium,
   },
   imagePreview: {
-    width: '100%',
-    height: 200,
-    marginTop: 10,
-    borderRadius: 8,
+    width: size.relative.full,
+    height: size.block.xlarge,
+    marginTop: spacing.md,
+    borderRadius: spacing.sm,
   },
 });
