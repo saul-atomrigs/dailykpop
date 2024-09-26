@@ -3,6 +3,7 @@ import { StyleSheet, FlatList, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { PostProps } from '@/types';
 import { AddButton, Post, ErrorMessage, LoadingIndicator } from '@/components';
 import { useFetchPosts } from '@/hooks';
 
@@ -10,9 +11,11 @@ export default function CommunityPage() {
   const router = useRouter();
   const { posts, loading, error, refetch } = useFetchPosts();
 
-  const renderItem = ({ item }) => <Post post={item} onPress={navigateToDetailedFeed} />;
+  const renderItem = ({ item }: { item: PostProps['post'] }) => (
+    <Post post={item} onPress={navigateToDetailedFeed} />
+  );
 
-  const navigateToDetailedFeed = (post) => {
+  const navigateToDetailedFeed = (post: PostProps['post']) => {
     router.push({
       pathname: '/DetailedFeed',
       params: {

@@ -2,17 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-interface PostProps {
-  post: {
-    id: string;
-    title: string;
-    content: string;
-    image_url: string;
-    likes: number;
-    comments: Array<{ id: string; text: string }>;
-  };
-  onPress: (post: PostProps['post']) => void;
-}
+import type { PostProps } from '@/types';
 
 const Post: React.FC<PostProps> = ({ post, onPress }) => {
   return (
