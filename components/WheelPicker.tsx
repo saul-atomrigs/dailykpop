@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { kpopGroups } from '@/lib/kpopGroups';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 interface WheelPickerProps {
   selectedValue: string;
@@ -22,7 +23,7 @@ export default function WheelPicker({ selectedValue, onValueChange, onConfirm }:
         ))}
       </Picker>
       <TouchableOpacity onPress={onConfirm} style={styles.confirm}>
-        <Text>Confirm</Text>
+        <Text style={styles.confirmText}>Confirm</Text>
       </TouchableOpacity>
     </View>
   );
@@ -33,13 +34,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.background,
+    padding: spacing.md,
   },
   picker: {
-    width: 150,
-    height: 220,
+    width: size.block.large,
+    height: size.block.xlarge,
   },
   confirm: {
-    height: 180,
+    height: size.block.small,
     justifyContent: 'center',
+    backgroundColor: colors.buttonBackground,
+    paddingHorizontal: spacing.md,
+    borderRadius: size.borderRadius.medium,
+  },
+  confirmText: {
+    color: colors.buttonText,
+    fontSize: typography.fontSize.md,
+    fontWeight: typography.fontWeight.bold,
   },
 });

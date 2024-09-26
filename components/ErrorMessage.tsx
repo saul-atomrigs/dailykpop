@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 interface ErrorMessageProps {
   message: string;
@@ -26,25 +27,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: spacing.lg,
   },
   errorText: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: typography.fontSize.md,
+    color: colors.text,
     textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: spacing.md,
+    marginBottom: spacing.md,
   },
   retryButton: {
-    backgroundColor: '#4ECDC4',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
+    backgroundColor: colors.buttonBackground,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderRadius: size.borderRadius.medium,
   },
   retryButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: colors.buttonText,
+    fontSize: typography.fontSize.md,
+    fontWeight: typography.fontWeight.bold,
   },
 });
 

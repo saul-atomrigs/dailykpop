@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type { PostProps } from '@/types';
 import { AddButton, Post, ErrorMessage, LoadingIndicator } from '@/components';
 import { useFetchPosts } from '@/hooks';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 export default function CommunityPage() {
   const router = useRouter();

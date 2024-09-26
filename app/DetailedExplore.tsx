@@ -10,11 +10,12 @@ import {
   PLATFORM_NAMES,
   PLATFORM_COLORS,
 } from '@/constants';
+import { colors, spacing, typography } from '@/design-tokens';
 
 /**
  * KPOP 아이돌 SNS 및 뉴스를 접할 수 있는 페이지
  */
-export default function ExplorePage() {
+export default function DetailedExplore() {
   const { param } = useLocalSearchParams();
   
   /**
@@ -66,20 +67,20 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    paddingVertical: 10,
+    paddingVertical: spacing.sm,
     justifyContent: 'space-evenly',
     borderWidth: 0.2,
   },
   socialIcon: {
-    padding: 8,
+    padding: spacing.sm,
     flex: 1,
-    marginHorizontal: 5,
-    borderRadius: 20,
+    marginHorizontal: spacing.xs,
+    borderRadius: spacing.md,
   },
   socialText: {
-    fontSize: 13,
+    fontSize: typography.fontSize.sm,
     alignSelf: 'center',
-    fontWeight: 'bold',
-    color: '#fff',
+    fontWeight: typography.fontWeight.bold,
+    color: colors.buttonText,
   },
 });

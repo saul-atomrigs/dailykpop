@@ -7,6 +7,7 @@ import { kpopGroups } from '@/lib/kpopGroups';
 import { WIDTH } from '@/utils';
 import { COMMON_STRINGS } from '@/constants';
 import { ROUTES } from '@/routing';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 const sectionData = [
   {
@@ -33,7 +34,7 @@ export default function Explore() {
           <Text
             style={styles.item}
             onPress={() =>
-              router.push({ pathname: ROUTES.EXPLORE_PAGE, params: { param: item } })
+              router.push({ pathname: ROUTES.DETAILED_EXPLORE, params: { param: item } })
             }
           >
             {item}

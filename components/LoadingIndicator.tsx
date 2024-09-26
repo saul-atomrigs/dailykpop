@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 interface LoadingIndicatorProps {
   color?: string;
