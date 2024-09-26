@@ -30,7 +30,7 @@ export default function Calendar() {
     }, [])
   );
 
-  function renderItem(props: any) {
+  const renderItem = (props: any) => {
     return (
       <RenderItem
         {...props}
@@ -38,6 +38,10 @@ export default function Calendar() {
         handleThumbsDown={handleThumbsDown}
       />
     );
+  }
+
+  const renderEmptyDate = () => {
+    return <View style={styles.emptyDate}></View>;
   }
 
   return (
@@ -51,25 +55,7 @@ export default function Calendar() {
         showClosingKnob={true}
         markingType={'custom'}
         showScrollIndicator={true}
-        theme={{
-          textDayFontWeight: '500',
-          textMonthFontWeight: '500',
-          todayButtonFontWeight: '500',
-          textDayHeaderFontWeight: '500',
-          calendarBackground: '#fff',
-          agendaKnobColor: 'gray',
-          agendaTodayColor: 'blue',
-          dotColor: '#000',
-          textSectionTitleColor: '#000',
-          textSectionTitleDisabledColor: '#d9e1e8',
-          selectedDayBackgroundColor: '#000',
-          selectedDayTextColor: '#ffffff',
-          monthTextColor: 'blue',
-          todayTextColor: 'blue',
-          dayTextColor: '#2d4150',
-          textDisabledColor: '#d9e1e8',
-          selectedDotColor: '#ffffff',
-        }}
+        theme={theme}
         hideExtraDays={false}
       />
 
@@ -217,10 +203,6 @@ function RenderItem(props: any) {
   );
 }
 
-function renderEmptyDate() {
-  return <View style={styles.emptyDate}></View>;
-}
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -277,3 +259,23 @@ const styles = StyleSheet.create({
     marginBottom: -20,
   },
 });
+
+const theme = {
+  textDayFontWeight: '500',
+  textMonthFontWeight: '500',
+  todayButtonFontWeight: '500',
+  textDayHeaderFontWeight: '500',
+  calendarBackground: '#fff',
+  agendaKnobColor: 'gray',
+  agendaTodayColor: 'blue',
+  dotColor: '#000',
+  textSectionTitleColor: '#000',
+  textSectionTitleDisabledColor: '#d9e1e8',
+  selectedDayBackgroundColor: '#000',
+  selectedDayTextColor: '#ffffff',
+  monthTextColor: 'blue',
+  todayTextColor: 'blue',
+  dayTextColor: '#2d4150',
+  textDisabledColor: '#d9e1e8',
+  selectedDotColor: '#ffffff',
+}
