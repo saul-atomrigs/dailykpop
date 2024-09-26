@@ -7,11 +7,11 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
-import { Plus, ThumbsUp, ThumbsDown } from 'phosphor-react-native';
+import { ThumbsUp, ThumbsDown } from 'phosphor-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { supabase } from '../../supabaseClient';
-import { auth } from '@/firebaseConfig';
+
+import { supabase } from '@/supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AddButton } from '@/components';
 
