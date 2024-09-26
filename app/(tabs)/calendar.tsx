@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Dimensions,
   Text,
   TouchableOpacity,
   View,
@@ -15,7 +14,7 @@ import { supabase } from '@/supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AddButton } from '@/components';
 import { useEvents, useVoting } from '@/hooks';
-import { WIDTH } from '@/utils';
+import { rowHasChanged, WIDTH } from '@/utils';
 
 /** 
  * 아이돌 스케쥴, 생일, 콘서트 등 이벤트 일정 확인 페이지
@@ -221,9 +220,6 @@ function RenderItem(props: any) {
 function renderEmptyDate() {
   return <View style={styles.emptyDate}></View>;
 }
-
-const rowHasChanged = (r1: { text: string }, r2: { text: string }) =>
-  r1.text !== r2.text;
 
 const styles = StyleSheet.create({
   safeArea: {
