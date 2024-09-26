@@ -20,7 +20,7 @@ import { useEvents } from '@/hooks';
  * 아이돌 스케쥴, 생일, 콘서트 등 이벤트 일정 확인 페이지
  */
 export default function Calendar() {
-  const { items, loading, error, fetchEvents } = useEvents();
+  const { items, itemsReduced, loading, error, fetchEvents } = useEvents();
   const router = useRouter();
 
   /**
@@ -114,25 +114,6 @@ export default function Calendar() {
       fetchEvents();
     }, [])
   );
-
-  /**
-   * `react-native-calendars` 라이브러리에서 사용하기 위해 이벤트 목록을 축소하는 함수
-   */
-  const itemsReduced = items.reduce((acc, event) => {
-    const date = event.date;
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push({
-      artist: event.artist,
-      event: event.event,
-      id: event.id,
-      thumbs_up: event.thumbs_up, // Add this line to make sure the vote counts are passed
-      thumbs_down: event.thumbs_down, // Add this line to make sure the vote counts are passed
-      date: event.date,
-    });
-    return acc;
-  }, {});
 
   function renderItem(props: any) {
     return (
