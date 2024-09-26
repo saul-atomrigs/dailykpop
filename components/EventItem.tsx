@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ThumbsUp, ThumbsDown } from 'phosphor-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { supabase } from '@/supabaseClient';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 interface EventItemProps {
   artist: string;
@@ -153,27 +155,28 @@ export default function EventItem(props: EventItemProps) {
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
     flex: 1,
-    borderRadius: 13,
-    padding: 10,
-    marginTop: 10,
-    marginRight: 20,
+    borderRadius: size.borderRadius.large,
+    padding: spacing.md,
+    marginTop: spacing.md,
+    marginRight: spacing.lg,
   },
   artist: {
-    fontWeight: '800',
+    fontWeight: typography.fontWeight.bold,
+    fontSize: typography.fontSize.md,
   },
   eventContainer: {
     flexDirection: 'row',
   },
   event: {
-    marginHorizontal: 10,
-    fontSize: 16,
+    marginHorizontal: spacing.sm,
+    fontSize: typography.fontSize.md,
   },
   stats: {
     flexDirection: 'row',
-    gap: 10,
-    marginHorizontal: 10,
+    gap: spacing.sm,
+    marginHorizontal: spacing.sm,
     justifyContent: 'flex-end',
   },
 });

@@ -8,6 +8,7 @@ import {
 import { useState } from 'react';
 import { Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 export default function GoogleLogin() {
   GoogleSignin.configure();

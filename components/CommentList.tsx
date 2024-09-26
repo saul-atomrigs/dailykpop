@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { UserSquare } from 'phosphor-react-native';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 export default function CommentList({ comment }) {
   return (
@@ -21,12 +22,12 @@ export default function CommentList({ comment }) {
 const styles = StyleSheet.create({
   comment: {
     flexDirection: 'row',
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    backgroundColor: '#f9f9f9',
-    marginVertical: 4,
-    borderRadius: 8,
+    padding: spacing.md,
+    borderBottomWidth: size.lineWidth.micro,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.background,
+    marginVertical: spacing.xs,
+    borderRadius: size.borderRadius.medium,
   },
   commentContent: {
     flex: 1,
@@ -35,16 +36,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   authorName: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    color: '#333',
+    fontWeight: typography.fontWeight.bold,
+    fontSize: typography.fontSize.sm,
+    color: colors.text,
   },
   commentText: {
-    fontSize: 15,
-    color: '#333',
-    lineHeight: 20,
+    fontSize: typography.fontSize.md,
+    color: colors.text,
+    lineHeight: typography.lineHeight.md,
   },
 });

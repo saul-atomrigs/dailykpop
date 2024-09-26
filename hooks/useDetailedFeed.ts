@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useAuth } from '@/hooks';
+import useAuth from './useAuth';
 import { supabase } from '@/supabaseClient';
 
 export default function useDetailedFeed() {

@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 
 import { AddButton, WheelPicker } from '@/components';
 import { supabase } from '@/supabaseClient';
+import { colors, spacing, typography, size } from '@/design-tokens';
 
 /**
  * 일정 추가 페이지
@@ -72,7 +73,7 @@ export default function AddSchedule() {
             onChangeText={(value) => handleInputChange('artist', value)}
             placeholder='1. Who? (write here or pick below)'
             style={styles.textInput}
-            placeholderTextColor='#666'
+            placeholderTextColor={colors.placeholderText}
           />
           {/* 아이돌 선택 원형 휠 피커 */}
           <WheelPicker
@@ -87,7 +88,7 @@ export default function AddSchedule() {
                 value={text}
                 placeholder='2. When?'
                 style={styles.textInput}
-                placeholderTextColor='#666'
+                placeholderTextColor={colors.placeholderText}
                 editable={false}
               />
             </View>
@@ -107,7 +108,7 @@ export default function AddSchedule() {
             onChangeText={(value) => handleInputChange('event', value)}
             placeholder='3. Event (schedule, birthday, release..)'
             style={styles.textInput}
-            placeholderTextColor='#666'
+            placeholderTextColor={colors.placeholderText}
           />
 
           {/* 추가 버튼 */}
@@ -116,7 +117,7 @@ export default function AddSchedule() {
               title='Add to Calendar'
               onPress={() => {
                 addItem();
-                router.push('/calendar');
+                router.push('/CalendarPage');
               }}
             />
           </View>
@@ -137,19 +138,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
   },
   textInput: {
-    fontSize: 16,
-    color: '#000',
-    height: 50,
-    width: 300,
-    borderColor: '#e6e6e6',
-    backgroundColor: '#eee',
-    borderWidth: 1,
-    borderRadius: 13,
-    padding: 10,
-    marginVertical: 15,
+    fontSize: typography.fontSize.md,
+    color: colors.text,
+    height: size.block.small,
+    borderColor: colors.border,
+    backgroundColor: colors.inputBackground,
+    borderWidth: size.lineWidth.micro,
+    borderRadius: size.borderRadius.medium,
+    padding: spacing.sm,
+    marginVertical: spacing.md,
   },
   pickerContainer: {
     flexDirection: 'row',
@@ -157,36 +157,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   picker: {
-    width: 150,
-    height: 220,
+    width: size.block.small,
+    height: size.block.large,
   },
   confirm: {
-    height: 180,
+    height: size.block.large,
     justifyContent: 'center',
   },
   buttonWrapper: {
     marginTop: 'auto',
-    paddingVertical: 20,
-    width: '100%',
+    paddingVertical: spacing.lg,
+    width: size.relative.full,
     alignItems: 'center',
   },
   addButton: {
-    width: 300,
-    height: 40,
-    backgroundColor: 'black',
-    borderRadius: 100,
+    width: size.block.medium,
+    height: size.block.small,
+    backgroundColor: colors.buttonBackground,
+    borderRadius: size.borderRadius.xxlarge,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: 'lightgray',
-    shadowOffset: { width: 5, height: 5 },
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: size.lineWidth.micro, height: size.lineWidth.micro },
     shadowOpacity: 0.5,
-    shadowRadius: 5,
+    shadowRadius: size.lineWidth.micro,
     elevation: 0.8,
   },
   addButtonText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#fff',
+    fontSize: typography.fontSize.md,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.buttonText,
     textDecorationLine: 'underline',
   },
 });

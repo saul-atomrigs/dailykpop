@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 import type { PostProps } from '@/types';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 const Post: React.FC<PostProps> = ({ post, onPress }) => {
   return (
@@ -31,36 +32,36 @@ const Post: React.FC<PostProps> = ({ post, onPress }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: 'white',
-    borderRadius: 8,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 12,
+    backgroundColor: colors.background,
+    borderRadius: size.borderRadius.medium,
+    marginHorizontal: spacing.md,
+    marginVertical: spacing.sm,
+    padding: spacing.md,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: colors.shadowColor,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: size.borderRadius.small,
   },
   image: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-    marginRight: 12,
+    width: size.block.small,
+    height: size.block.small,
+    borderRadius: size.borderRadius.medium,
+    marginRight: spacing.md,
   },
   contentContainer: {
     flex: 1,
     justifyContent: 'space-between',
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
+    fontSize: typography.fontSize.md,
+    fontWeight: typography.fontWeight.bold,
+    marginBottom: spacing.xs,
   },
   content: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
+    fontSize: typography.fontSize.sm,
+    color: colors.text,
+    marginBottom: spacing.sm,
   },
   statsContainer: {
     flexDirection: 'row',
@@ -68,12 +69,12 @@ const styles = StyleSheet.create({
   statItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: spacing.md,
   },
   statText: {
-    marginLeft: 4,
-    fontSize: 14,
-    color: '#666',
+    marginLeft: spacing.xs,
+    fontSize: typography.fontSize.sm,
+    color: colors.primary,
   },
 });
 
