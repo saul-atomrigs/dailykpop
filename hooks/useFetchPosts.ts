@@ -33,7 +33,7 @@ const useFetchPosts = () => {
         data.map(async (post) => {
           const { data: comments, error: commentsError } = await supabase
             .from('comments')
-            .select('id, text')
+            .select('id, comment')
             .eq('post_id', post.id);
 
           if (commentsError) {
