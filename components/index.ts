@@ -9,3 +9,4 @@ export { default as FeedHeader } from './FeedHeader';
 export { default as ErrorMessage } from './ErrorMessage';
 export { default as LoadingIndicator } from './LoadingIndicator';
 export { default as Post } from './Post';
+export { default as EventItem } from './EventItem';
