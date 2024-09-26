@@ -36,6 +36,7 @@ export default function RootLayout() {
         <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
         <Stack.Screen name='LoginPage' options={{ headerShown: false }} />
         <Stack.Screen name='ExplorePage' options={{ headerShown: false }} />
+        <Stack.Screen name='CommunityPage' options={{ headerShown: false }} />
         <Stack.Screen name='DetailedFeed' options={{ headerShown: false }} />
         <Stack.Screen name='AddFeed' options={{ headerShown: false }} />
         <Stack.Screen name='AddSchedule' options={{ headerShown: false }} />
