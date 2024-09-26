@@ -17,11 +17,11 @@ interface EventItemProps {
 /**
  * 이벤트 일정 아이템을 렌더링하는 함수
  */
-export default function EventItem(props: any) {
+export default function EventItem(props: EventItemProps) {
   const [hasVoted, setHasVoted] = useState(false);
   const [voteType, setVoteType] = useState<'up' | 'down' | null>(null);
-  const [thumbsUp, setThumbsUp] = useState(props.thumbs_up);
-  const [thumbsDown, setThumbsDown] = useState(props.thumbs_down);
+  const [thumbsUp, setThumbsUp] = useState<number | null>(props.thumbs_up);
+  const [thumbsDown, setThumbsDown] = useState<number | null>(props.thumbs_down);
 
   useEffect(() => {
     /**
@@ -51,7 +51,7 @@ export default function EventItem(props: any) {
   /**
    * 이미 투표한 아이콘을 누르면 투표를 취소하고, 아니라면 새로 투표를 생성
    */
-  const handleVote = async (voteFunction, currentVoteType) => {
+  const handleVote = async (voteFunction: (eventId: number) => Promise<any>, currentVoteType: 'up' | 'down' | null) => {
     if (hasVoted && currentVoteType === voteType) {
       const result = await removeVote(props.id);
       if (result) {
