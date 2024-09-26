@@ -14,7 +14,7 @@ import {
 /**
  * KPOP 아이돌 SNS 및 뉴스를 접할 수 있는 페이지
  */
-export default function ExplorePage() {
+export default function DetailedExplore() {
   const { param } = useLocalSearchParams();
   
   /**

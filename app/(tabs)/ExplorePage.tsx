@@ -33,7 +33,7 @@ export default function Explore() {
           <Text
             style={styles.item}
             onPress={() =>
-              router.push({ pathname: ROUTES.EXPLORE_PAGE, params: { param: item } })
+              router.push({ pathname: ROUTES.DETAILED_EXPLORE, params: { param: item } })
             }
           >
             {item}
