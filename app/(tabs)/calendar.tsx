@@ -15,10 +15,16 @@ import { supabase } from '@/supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AddButton } from '@/components';
 
+/** 
+ * 아이돌 스케쥴, 생일, 콘서트 등 이벤트 일정 확인 페이지
+ */
 export default function Calendar() {
   const [items, setItems] = useState([]);
   const router = useRouter();
 
+  /**
+   * 이벤트 일정 목록을 가져오는 함수
+   */
   const fetchEvents = async () => {
     const { data, error } = await supabase.from('events').select('*');
     if (error) {
@@ -28,6 +34,9 @@ export default function Calendar() {
     }
   };
 
+  /**
+   * 이벤트 일정에 대한 투표를 처리하는 함수
+   */
   const handleVote = async (eventId: number, voteType: 'up' | 'down') => {
     try {
       const userId = await AsyncStorage.getItem('@dailykpop-user');
@@ -36,7 +45,9 @@ export default function Calendar() {
         return;
       }
 
-      // Check if user has already voted for this event
+      /**
+       * 사용자가 이미 해당 이벤트에 투표했는지 확인하는 함수
+       */
       const { data: existingVote, error: checkError } = await supabase
         .from('votes')
         .select('*')
@@ -52,26 +63,35 @@ export default function Calendar() {
         return;
       }
 
-      // Insert the new vote into the `votes` table
+      /**
+       * 새로운 투표를 `votes` 테이블에 삽입하는 함수
+       */
       const { error: insertError } = await supabase
         .from('votes')
         .insert({ user_id: userId, event_id: eventId, vote_type: voteType });
       if (insertError) throw insertError;
 
-      // Fetch the total thumbs_up and thumbs_down counts
+      /**
+       * '좋아요' 수를 가져오는 함수
+       */
       const { count: thumbsUpCount } = await supabase
         .from('votes')
         .select('*', { count: 'exact', head: true })
         .eq('event_id', eventId)
         .eq('vote_type', 'up');
 
+      /**
+       * '싫어요' 수를 가져오는 함수
+       */
       const { count: thumbsDownCount } = await supabase
         .from('votes')
         .select('*', { count: 'exact', head: true })
         .eq('event_id', eventId)
         .eq('vote_type', 'down');
 
-      // Update the thumbs_up and thumbs_down columns in the `events` table
+      /**
+       * 투표 수를 업데이트하는 함수
+       */
       const { error: updateError } = await supabase
         .from('events')
         .update({
@@ -81,7 +101,9 @@ export default function Calendar() {
         .eq('id', eventId);
       if (updateError) throw updateError;
 
-      // Return the updated counts
+      /**
+       * 업데이트된 투표 수(좋아요, 싫어요)를 반환하는 함수
+       */
       return { thumbsUpCount, thumbsDownCount };
     } catch (error) {
       console.error('Error handling vote:', error);
@@ -89,7 +111,13 @@ export default function Calendar() {
     }
   };
 
+  /**
+   * 좋아요 투표 함수
+   */
   const handleThumbsUp = (eventId: number) => handleVote(eventId, 'up');
+  /**
+   * 싫어요 투표 함수
+   */
   const handleThumbsDown = (eventId: number) => handleVote(eventId, 'down');
 
   useFocusEffect(
@@ -98,6 +126,9 @@ export default function Calendar() {
     }, [])
   );
 
+  /**
+   * `react-native-calendars` 라이브러리에서 사용하기 위해 이벤트 목록을 축소하는 함수
+   */
   const itemsReduced = items.reduce((acc, event) => {
     const date = event.date;
     if (!acc[date]) {
@@ -164,7 +195,9 @@ export default function Calendar() {
   );
 }
 
-// Modified RenderItem component
+/**
+ * 이벤트 일정 아이템을 렌더링하는 함수
+ */
 function RenderItem(props: any) {
   const [hasVoted, setHasVoted] = useState(false);
   const [voteType, setVoteType] = useState<'up' | 'down' | null>(null);
@@ -172,6 +205,9 @@ function RenderItem(props: any) {
   const [thumbsDown, setThumbsDown] = useState(props.thumbs_down);
 
   useEffect(() => {
+    /**
+     * 현재 사용자가 해당 이벤트에 투표했는지 확인하는 함수
+     */
     const checkUserVote = async () => {
       const userId = await AsyncStorage.getItem('@dailykpop-user');
       const { data: userVote } = await supabase
@@ -181,18 +217,23 @@ function RenderItem(props: any) {
         .eq('event_id', props.id)
         .single();
 
+      /**
+       * 사용자가 이미 해당 이벤트에 투표했다면 투표 상태를 업데이트
+       */
       if (userVote) {
         setHasVoted(true);
-        setVoteType(userVote.vote_type); // Set the current vote type (up or down)
+        setVoteType(userVote.vote_type);
       }
     };
 
     checkUserVote();
   }, []);
 
+  /**
+   * 이미 투표한 아이콘을 누르면 투표를 취소하고, 아니라면 새로 투표를 생성
+   */
   const handleVote = async (voteFunction, currentVoteType) => {
     if (hasVoted && currentVoteType === voteType) {
-      // If the user presses the already pressed icon, remove their vote
       const result = await removeVote(props.id);
       if (result) {
         setThumbsUp(result.thumbsUpCount);
@@ -201,7 +242,6 @@ function RenderItem(props: any) {
         setVoteType(null); // Reset vote type
       }
     } else {
-      // If it's a new vote, add the vote
       const result = await voteFunction(props.id);
       if (result) {
         setThumbsUp(result.thumbsUpCount);
@@ -212,6 +252,9 @@ function RenderItem(props: any) {
     }
   };
 
+  /**
+   * 투표를 취소하는 함수
+   */
   const removeVote = async (eventId: number) => {
     try {
       const userId = await AsyncStorage.getItem('@dailykpop-user');
@@ -220,7 +263,6 @@ function RenderItem(props: any) {
         return;
       }
 
-      // Delete the user's vote from the `votes` table
       const { error: deleteError } = await supabase
         .from('votes')
         .delete()
@@ -229,7 +271,6 @@ function RenderItem(props: any) {
 
       if (deleteError) throw deleteError;
 
-      // Fetch the updated thumbs_up and thumbs_down counts
       const { count: thumbsUpCount } = await supabase
         .from('votes')
         .select('*', { count: 'exact', head: true })
@@ -242,7 +283,6 @@ function RenderItem(props: any) {
         .eq('event_id', eventId)
         .eq('vote_type', 'down');
 
-      // Update the thumbs_up and thumbs_down columns in the `events` table
       const { error: updateError } = await supabase
         .from('events')
         .update({
@@ -253,7 +293,6 @@ function RenderItem(props: any) {
 
       if (updateError) throw updateError;
 
-      // Return the updated counts
       return { thumbsUpCount, thumbsDownCount };
     } catch (error) {
       console.error('Error removing vote:', error);
