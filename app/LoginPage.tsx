@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppleLogin from '@/components/buttons/AppleLogin';
 import GoogleLogin from '@/components/buttons/GoogleLogin';
+import { spacing } from '@/design-tokens';
 
 /**
  * 로그인 페이지
@@ -29,6 +30,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    gap: spacing.sm,
   },
 });

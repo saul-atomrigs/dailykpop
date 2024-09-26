@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CommentInput, CommentList, FeedHeader } from '@/components';
 import { useDetailedFeed } from '@/hooks';
+import { colors, spacing } from '@/design-tokens';
 
 /**
  * 피드 상세 페이지
@@ -68,15 +69,15 @@ export default function DetailedFeed() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
   },
   container: { 
     flex: 1, 
-    padding: 16, 
-    backgroundColor: '#fff' 
+    padding: spacing.md, 
+    backgroundColor: colors.background 
   },
   scrollContent: {
-    padding: 16,
+    padding: spacing.md,
     paddingBottom: 80,
   },
 });

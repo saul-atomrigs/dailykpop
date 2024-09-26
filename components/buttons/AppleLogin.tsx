@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { auth } from '@/firebaseConfig';
 import { OAuthProvider, signInWithCredential } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 export default function AppleAuth() {
   const router = useRouter();

@@ -6,7 +6,8 @@ import { useFocusEffect, useRouter } from 'expo-router';
 
 import { AddButton, EventItem } from '@/components';
 import { useEvents, useVoting } from '@/hooks';
-import { rowHasChanged, WIDTH } from '@/utils';
+import { rowHasChanged } from '@/utils';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 /** 
  * 아이돌 스케쥴, 생일, 콘서트 등 이벤트 일정 확인 페이지
@@ -61,37 +62,37 @@ export default function Calendar() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
   },
   emptyDate: {
-    height: 15,
+    height: size.block.none,
     flex: 1,
-    paddingTop: 30,
+    paddingTop: spacing.lg,
   },
   addButtonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: -20,
+    marginTop: spacing.md,
+    marginBottom: -spacing.lg,
   },
 });
 
 const theme = {
-  textDayFontWeight: '500',
-  textMonthFontWeight: '500',
-  todayButtonFontWeight: '500',
-  textDayHeaderFontWeight: '500',
-  calendarBackground: '#fff',
-  agendaKnobColor: 'gray',
-  agendaTodayColor: 'blue',
-  dotColor: '#000',
-  textSectionTitleColor: '#000',
-  textSectionTitleDisabledColor: '#d9e1e8',
-  selectedDayBackgroundColor: '#000',
-  selectedDayTextColor: '#ffffff',
-  monthTextColor: 'blue',
-  todayTextColor: 'blue',
-  dayTextColor: '#2d4150',
-  textDisabledColor: '#d9e1e8',
-  selectedDotColor: '#ffffff',
+  textDayFontWeight: typography.fontWeight.medium,
+  textMonthFontWeight: typography.fontWeight.medium,
+  todayButtonFontWeight: typography.fontWeight.medium,
+  textDayHeaderFontWeight: typography.fontWeight.medium,
+  calendarBackground: colors.background,
+  agendaKnobColor: colors.agendaKnob,
+  agendaTodayColor: colors.agendaToday,
+  dotColor: colors.dot,
+  textSectionTitleColor: colors.textSectionTitle,
+  textSectionTitleDisabledColor: colors.textSectionTitleDisabled,
+  selectedDayBackgroundColor: colors.selectedDayBackground,
+  selectedDayTextColor: colors.selectedDayText,
+  monthTextColor: colors.monthText,
+  todayTextColor: colors.todayText,
+  dayTextColor: colors.dayText,
+  textDisabledColor: colors.textDisabled,
+  selectedDotColor: colors.selectedDot,
 }

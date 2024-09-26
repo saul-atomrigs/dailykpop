@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { PaperPlaneTilt } from 'phosphor-react-native';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 export default function CommentInput({ newComment, setNewComment, submitComment }) {
   return (
@@ -25,25 +26,25 @@ const styles = StyleSheet.create({
     right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    padding: spacing.md,
+    backgroundColor: colors.background,
+    borderTopWidth: size.lineWidth.micro,
+    borderTopColor: colors.border,
   },
   commentInput: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    backgroundColor: '#fff',
+    borderWidth: size.lineWidth.micro,
+    borderColor: colors.border,
+    borderRadius: size.borderRadius.large,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    fontSize: typography.fontSize.md,
+    backgroundColor: colors.inputBackground,
   },
   sendButton: {
-    marginLeft: 12,
-    backgroundColor: '#007AFF',
-    borderRadius: 20,
-    padding: 8,
+    marginLeft: spacing.md,
+    backgroundColor: colors.primary,
+    borderRadius: size.borderRadius.large,
+    padding: spacing.sm,
   },
 });

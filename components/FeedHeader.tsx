@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Heart, UserSquare } from 'phosphor-react-native';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 export default function FeedHeader({ title, content, image_url, likes, liked, toggleLike, isAuthenticated }) {
   return (
@@ -33,50 +34,47 @@ export default function FeedHeader({ title, content, image_url, likes, liked, to
 
 const styles = StyleSheet.create({
   title: { 
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontSize: typography.fontSize.xxl,
+    fontWeight: typography.fontWeight.bold,
+    marginBottom: spacing.sm,
   },
   author: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: spacing.md,
   },
   authorText: {
-    marginLeft: 8,
-    fontSize: 16,
-    color: '#555',
+    marginLeft: spacing.xs,
+    fontSize: typography.fontSize.md,
+    color: colors.textDisabled,
   },
   content: {
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 16,
+    fontSize: typography.fontSize.md,
+    lineHeight: typography.lineHeight.md,
+    marginBottom: spacing.md,
   },
   image: {
     width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 16,
+    height: size.block.xlarge,
+    borderRadius: size.borderRadius.medium,
+    marginBottom: spacing.md,
   }, 
   likeContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginBottom: 24,
+    marginBottom: spacing.xxl,
   },
   likeButton: { 
     flexDirection: 'row', 
     alignItems: 'center' 
   },
   likeText: { 
-    marginLeft: 8, 
-    fontSize: 16 
-  },
-  commentSection: { 
-    marginTop: 24 
+    marginLeft: spacing.xs, 
+    fontSize: typography.fontSize.md 
   },
   commentTitle: { 
-    fontSize: 20, 
-    fontWeight: 'bold', 
-    marginBottom: 12 
+    fontSize: typography.fontSize.xl, 
+    fontWeight: typography.fontWeight.bold, 
+    marginBottom: spacing.md 
   },
 });

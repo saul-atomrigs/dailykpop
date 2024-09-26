@@ -1,5 +1,6 @@
 import React, { type ComponentProps } from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 type SocialIconProps = ComponentProps<typeof TouchableOpacity> & {
   backgroundColor: string;
@@ -24,15 +25,15 @@ export default function SocialIcon({
 
 const styles = StyleSheet.create({
   socialIcon: {
-    padding: 8,
+    padding: spacing.sm,
     flex: 1,
-    marginHorizontal: 5,
-    borderRadius: 20,
+    marginHorizontal: spacing.xs,
+    borderRadius: size.borderRadius.xxlarge,
   },
   socialText: {
-    fontSize: 13,
+    fontSize: typography.fontSize.xs,
     alignSelf: 'center',
-    fontWeight: 'bold',
-    color: '#fff',
+    fontWeight: typography.fontWeight.bold,
+    color: colors.buttonText,
   },
 });

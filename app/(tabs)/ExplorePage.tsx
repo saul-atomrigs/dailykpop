@@ -7,6 +7,7 @@ import { kpopGroups } from '@/lib/kpopGroups';
 import { WIDTH } from '@/utils';
 import { COMMON_STRINGS } from '@/constants';
 import { ROUTES } from '@/routing';
+import { colors, size, spacing, typography } from '@/design-tokens';
 
 const sectionData = [
   {
