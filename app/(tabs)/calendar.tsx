@@ -14,25 +14,14 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import { supabase } from '@/supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AddButton } from '@/components';
+import { useEvents } from '@/hooks';
 
 /** 
  * 아이돌 스케쥴, 생일, 콘서트 등 이벤트 일정 확인 페이지
  */
 export default function Calendar() {
-  const [items, setItems] = useState([]);
+  const { items, loading, error, fetchEvents } = useEvents();
   const router = useRouter();
-
-  /**
-   * 이벤트 일정 목록을 가져오는 함수
-   */
-  const fetchEvents = async () => {
-    const { data, error } = await supabase.from('events').select('*');
-    if (error) {
-      console.log(error);
-    } else {
-      setItems(data);
-    }
-  };
 
   /**
    * 이벤트 일정에 대한 투표를 처리하는 함수
