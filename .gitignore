@@ -24,3 +24,6 @@ expo-env.d.ts
 
 google-services.json
 GoogleService-info.plist
+
+coverage/**/*
+scripts/

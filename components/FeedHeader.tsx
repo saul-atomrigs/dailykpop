@@ -6,28 +6,30 @@ import { colors, size, spacing, typography } from '@/design-tokens';
 export default function FeedHeader({ title, content, image_url, likes, liked, toggleLike, isAuthenticated }) {
   return (
     <>
-      <Text style={styles.title}>{title}</Text>
-      <View style={styles.author}>
+      <Text style={styles.title} testID="feed-header-title">{title}</Text>
+      <View style={styles.author} testID="feed-header-author">
         <UserSquare size={24} color='black' />
         <Text style={styles.authorText}>Author</Text>
       </View>
-      <Text style={styles.content}>{content}</Text>
+      <Text style={styles.content} testID="feed-header-content">{content}</Text>
       {image_url && (
         <Image
           source={{ uri: image_url as string }}
           style={styles.image}
+          testID="feed-header-image"
         />
       )}
-      <View style={styles.likeContainer}>
+      <View style={styles.likeContainer} testID="feed-header-like-container">
         <TouchableOpacity
           onPress={toggleLike}
           style={styles.likeButton}
+          testID="like-button"
         >
-          <Heart size={24} color={liked ? 'red' : 'black'} />
-          <Text style={styles.likeText}> {likes} Likes </Text>
+          <Heart size={24} color={liked ? 'red' : 'black'} testID="like-icon" />
+          <Text style={styles.likeText} testID="like-text"> {likes} Likes </Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.commentTitle}>Comments</Text>
+      <Text style={styles.commentTitle} testID="feed-header-comments">Comments</Text>
     </>
   );
 }

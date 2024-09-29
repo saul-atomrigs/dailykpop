@@ -4,7 +4,7 @@ import { colors, size, spacing, typography } from '@/design-tokens';
 
 type SocialIconProps = ComponentProps<typeof TouchableOpacity> & {
   backgroundColor: string;
-  text: string;
+  text?: string;
   onPress: () => void;
 };
 
@@ -17,6 +17,7 @@ export default function SocialIcon({
     <TouchableOpacity
       style={[styles.socialIcon, { backgroundColor }]}
       onPress={onPress}
+      testID="social-icon"
     >
       <Text style={styles.socialText}>{text}</Text>
     </TouchableOpacity>

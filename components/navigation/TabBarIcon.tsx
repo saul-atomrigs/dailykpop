@@ -8,7 +8,7 @@ type IconProps = ComponentProps<typeof CalendarPlus> & {
 export function TabBarIcon({ name, style, ...rest }: IconProps) {
   const IconComponent = getIconComponent(name);
   return (
-    <IconComponent size={28} style={[{ marginBottom: -3 }, style]} {...rest} />
+    <IconComponent size={28} style={[{ marginBottom: -3 }, style]} testID={`${name}Icon`} {...rest} />
   );
 }
 

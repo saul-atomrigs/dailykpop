@@ -13,7 +13,11 @@ export default function CommentInput({ newComment, setNewComment, submitComment 
         value={newComment}
         onChangeText={setNewComment}
       />
-      <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
+      <TouchableOpacity
+        onPress={submitComment}
+        style={styles.sendButton}
+        testID="submit-button"
+      >
         <PaperPlaneTilt size={24} color='white' />
       </TouchableOpacity>
     </View>

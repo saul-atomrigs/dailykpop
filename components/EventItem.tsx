@@ -122,32 +122,36 @@ export default function EventItem(props: EventItemProps) {
   };
 
   return (
-    <View style={styles.item}>
-      <Text style={styles.artist}>{props.artist}</Text>
+    <View style={styles.item} testID="event-item">
+      <Text style={styles.artist} testID="event-artist">{props.artist}</Text>
       <View style={styles.eventContainer}>
-        <Text style={styles.event}>{props.event}</Text>
+        <Text style={styles.event} testID="event-name">{props.event}</Text>
       </View>
       <View style={styles.stats}>
         <TouchableOpacity
           onPress={() => handleVote(props.handleThumbsUp, 'up')}
+          testID="thumbs-up-button"
         >
           <ThumbsUp
             size={20}
             color={voteType === 'up' ? 'hotpink' : 'black'}
             weight={voteType === 'up' ? 'duotone' : 'thin'}
+            testID="thumbs-up-icon"
           />
         </TouchableOpacity>
-        <Text>{thumbsUp}</Text>
+        <Text testID="thumbs-up-count">{thumbsUp}</Text>
         <TouchableOpacity
           onPress={() => handleVote(props.handleThumbsDown, 'down')}
+          testID="thumbs-down-button"
         >
           <ThumbsDown
             size={20}
             color={voteType === 'down' ? 'hotpink' : 'black'}
             weight={voteType === 'down' ? 'duotone' : 'thin'}
+            testID="thumbs-down-icon"
           />
         </TouchableOpacity>
-        <Text>{thumbsDown}</Text>
+        <Text testID="thumbs-down-count">{thumbsDown}</Text>
       </View>
     </View>
   );
