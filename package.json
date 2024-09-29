@@ -35,7 +35,9 @@
       "!**/.eslintrc.js",
       "!**/firebaseConfig.ts",
       "!**/metro.config.js",
-      "!**/supabaseClient.ts"
+      "!**/supabaseClient.ts",
+      "!**/android/**",
+      "!**/ios/**"
     ]
   },
   "dependencies": {
