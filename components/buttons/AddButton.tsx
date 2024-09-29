@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
-import { colors, size, spacing, typography } from '@/design-tokens';
+import { colors, size, typography } from '@/design-tokens';
 
 interface ButtonProps {
   title: string;
@@ -19,22 +19,22 @@ export const AddButton: React.FC<ButtonProps> = ({ title, onPress, style, textSt
 
 const styles = StyleSheet.create({
   button: {
-    width: 300,
+    width: size.block.medium, 
     height: 40,
-    backgroundColor: 'black',
-    borderRadius: 100,
+    backgroundColor: colors.buttonBackground, 
+    borderRadius: size.borderRadius.xlarge, 
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: 'lightgray',
-    shadowOffset: { width: 5, height: 5 },
+    shadowColor: colors.shadowColor, 
+    shadowOffset: { width: size.lineWidth.micro, height: size.lineWidth.micro },
     shadowOpacity: 0.5,
-    shadowRadius: 5,
+    shadowRadius: size.lineWidth.large,
     elevation: 0.8,
   },
   buttonText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#fff',
+    fontSize: typography.fontSize.md, 
+    fontWeight: typography.fontWeight.bold, 
+    color: colors.buttonText, 
     textDecorationLine: 'underline',
   },
 });

@@ -12,7 +12,7 @@ const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
   size = 'large'
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID='loading-indicator'>
       <ActivityIndicator size={size} color={color} />
     </View>
   );

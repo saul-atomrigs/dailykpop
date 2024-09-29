@@ -17,7 +17,10 @@
       "node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg))"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/$1"
+      "^@/(.*)$": "<rootDir>/$1",
+      "^@expo/vector-icons$": "<rootDir>/components/__mocks__/@expo/vector-icons.js",
+      "^@react-native-async-storage/async-storage$": "<rootDir>/components/__mocks__/@react-native-async-storage/async-storage.js",
+      "^@/supabaseClient$":  "<rootDir>/components/__mocks__/@/supabaseClient.js"
     },
     "collectCoverage": true,
     "collectCoverageFrom": [
@@ -28,16 +31,16 @@
       "!**/expo-env.d.ts",
       "!**/.expo/**",
       "!**/scripts/**",
-      "!**/app/+html.tsx",
-      "!**/app/+not-found.tsx",
-      "!**/app/_layout.tsx",
+      "!**/app/**",
       "!**/hooks/**",
       "!**/.eslintrc.js",
       "!**/firebaseConfig.ts",
       "!**/metro.config.js",
       "!**/supabaseClient.ts",
       "!**/android/**",
-      "!**/ios/**"
+      "!**/ios/**",
+      "!**/components/buttons/AppleLogin.tsx",
+      "!**/components/buttons/GoogleLogin.tsx"
     ]
   },
   "dependencies": {
@@ -82,6 +85,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
     "@testing-library/react-native": "^12.7.2",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",

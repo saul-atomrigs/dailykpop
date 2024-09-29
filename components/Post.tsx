@@ -7,8 +7,16 @@ import { colors, size, spacing, typography } from '@/design-tokens';
 
 const Post: React.FC<PostProps> = ({ post, onPress }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={() => onPress(post)}>
-      <Image source={{ uri: post.image_url }} style={styles.image} />
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => onPress(post)}
+      testID="post-container"
+    >
+      <Image
+        source={{ uri: post.image_url }}
+        style={styles.image}
+        testID="post-image"
+      />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>{post.title}</Text>
         <Text style={styles.content} numberOfLines={2}>
