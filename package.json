@@ -31,7 +31,11 @@
       "!**/app/+html.tsx",
       "!**/app/+not-found.tsx",
       "!**/app/_layout.tsx",
-      "!**/hooks/**"
+      "!**/hooks/**",
+      "!**/.eslintrc.js",
+      "!**/firebaseConfig.ts",
+      "!**/metro.config.js",
+      "!**/supabaseClient.ts"
     ]
   },
   "dependencies": {
