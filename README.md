@@ -13,8 +13,11 @@
     <img src="https://img.shields.io/badge/Firebase-10.13.1-FFA500?logo=firebase"> 
     <img src="https://img.shields.io/badge/Expo-51.0.28-000000?logo=expo"> 
     <img src="https://img.shields.io/badge/Jest-29.2.1-900C3F?logo=jest"> 
-    <br /><br />
-    <img width="395" alt="asdf" src="https://github.com/user-attachments/assets/06911ad6-18ad-4803-96b1-1fedd965e53e">
+</div>
+
+## Test results
+<div>
+        <img width="395" alt="asdf" src="https://github.com/user-attachments/assets/06911ad6-18ad-4803-96b1-1fedd965e53e">
 </div>
 
 ## 2.0.0 (2024.09.15)
